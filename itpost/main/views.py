@@ -59,7 +59,18 @@ class RegisterView(View):
 
 class MainView(View):
     def get(self, request):
-        return render(request, 'main.html')
+        user_id = request.session.get('user_id')
+        user = User.objects.get(pk=user_id)
+        print(user)
+        return render(request, 'main.html', {
+            'user': user
+        })
     
     def post(self, request):
         return
+    
+
+class LogoutView(View):
+    def get(self, request):
+        request.session.flush()
+        return redirect('/login')
