@@ -27,6 +27,9 @@ class User(models.Model):
     
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
+    
+    def get_user_detail(self):
+        return f"{self.role.name} - ({self.academic_info.major.code})"
 
 
 class Major(models.Model):
