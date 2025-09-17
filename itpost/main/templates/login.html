@@ -43,35 +43,5 @@
     </form>
 </div>
 
-<!-- <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <div class="relative bg-white shadow-lg rounded-lg p-8 pt-16 w-full max-w-md">
-        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
-            <img src="{{ MEDIA_URL }}logo.png" alt="">
-        </div>
-
-        <h3 class="text-3xl font-bold text-center mb-6">ลงชื่อเข้าใช้</h3>
-
-        <form method        {% csrf_token %}
-            <div>
-                <label for="{{ user_form.username.id_for_label }}" class="block mb-2 text-md font-medium text-gray-900">ชื่อผู้ใช้</label>
-                {{ user_form.username }}
-            </div>
-            <div>
-                <label for="{{ user_form.password.id_for_label }}" class="block mb-2 text-md font-medium text-gray-900">รหัสผ่าน</label>
-                {{ user_form.password }}
-            </div>
-
-            <div class="grid grid-cols-1 gap-2 pt-3">
-                <button type="submit"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-4 focus:outline-none cursor-pointer">
-                    เข้าสู่ระบบ
-                </button>
-                <a href="{% url 'register_view' %}"
-                    </a>
-            </div>
-        </form>
-    </div>
-</div> -->
-
 
 {% endblock %}

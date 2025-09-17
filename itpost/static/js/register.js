@@ -1,12 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // const yearSelect = document.getElementById('{{ academic_form.year.id_for_label }}');
-    // const majorSelect = document.getElementById('{{ academic_form.major.id_for_label }}');
+    const yearSelect = document.getElementById('{{ academic_form.year.id_for_label }}');
+    const majorSelect = document.getElementById('{{ academic_form.major.id_for_label }}');
     const specializationDiv = document.getElementById('specialization-div');
-    // const specializationSelect = document.getElementById('{{ academic_form.specialization.id_for_label }}');
-    const yearSelect = document.getElementById(yearId);
-    const majorSelect = document.getElementById(majorId);
-    const specializationSelect = document.getElementById(specializationId);
-
+    const specializationSelect = document.getElementById('{{ academic_form.specialization.id_for_label }}');
 
     const itChoices = [
         { value: '', text: '-- เลือกแขนง --' },

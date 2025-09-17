@@ -7,8 +7,6 @@ from django.http import HttpResponse
 from .models import *
 from main.forms import *
 
-def landing_page(request):
-    return render(request, 'main_page.html')
 
 class LoginView(View):
     def get(self, request):
@@ -22,9 +20,8 @@ class LoginView(View):
         user_form = LoginForm(request.POST)
         if user_form.is_valid():
             user = user_form.cleaned_data['user']
-            print('AYAHAHAHHAA')
             request.session['user_id'] = user.id
-            return redirect('/test')
+            return redirect('/')
         
         return render(request, 'login.html', {
             'user_form': user_form
@@ -60,8 +57,9 @@ class RegisterView(View):
         })
 
 
-class TestView(View):
+class MainView(View):
     def get(self, request):
-        return render(request, 'test.html')
+        return render(request, 'main.html')
+    
     def post(self, request):
         return

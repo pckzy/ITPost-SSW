@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+    <title>{% block title %}IT Post{% endblock %}</title>
+    <style>
+        /* .gradient-bg {
+            background: linear-gradient(to top, #011A4F, #023BB5);
+        } */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .profile-dropdown {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+        }
+        .profile-dropdown.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body class="font-prompt bg-gray-50">
+    {% block nav %}
+        {% include 'nav.html' %}
+    {% endblock %}
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="space-y-8">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+
+    {% block script %}{% endblock %}
+</body>
+</html>
