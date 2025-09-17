@@ -12,30 +12,24 @@ def landing_page(request):
 
 class LoginView(View):
     def get(self, request):
-        user_form = UserForm()
+        user_form = LoginForm()
 
         return render(request, 'login.html', {
-            'error': False,
             'user_form': user_form
         })
 
     def post(self, request):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        try:
-            user = User.objects.get(username=username, password=password)
+        user_form = LoginForm(request.POST)
+        if user_form.is_valid():
+            user = user_form.cleaned_data['user']
+            print('AYAHAHAHHAA')
             request.session['user_id'] = user.id
             return redirect('/test')
-        except User.DoesNotExist:
-            user_form = UserForm()
-            return render(request, 'login.html', {
-                'error': True,
-                'user_form': user_form
-            })
-
         
-        return redirect('/register')
+        return render(request, 'login.html', {
+            'user_form': user_form
+        })
+
     
 class RegisterView(View):
     def get(self, request):

@@ -21,15 +21,13 @@ class UserForm(forms.ModelForm):
         email = self.cleaned_data.get("email")
 
         if email and not email.endswith('@kmitl.ac.th'):
-            raise ValidationError(
-                    "อีเมลต้องลงท้ายด้วย @kmitl.ac.th"
-                )
+            raise forms.ValidationError("อีเมลต้องลงท้ายด้วย @kmitl.ac.th")
 
         return email
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        pattern = r'^6[0-9]07[0-9]{4}$'
+        pattern = r'^[0-9]{2}07[0-9]{4}$'
 
         if not re.match(pattern, username):
             raise forms.ValidationError('ต้องเป็นรหัสนักศึกษาเท่านั้น')
@@ -53,3 +51,32 @@ class AcademicInfoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['major'].empty_label = "-- เลือกสาขา --"
         self.fields['specialization'].empty_label = "-- เลือกแขนง --"
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter the username',
+            'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Enter the password',
+            'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+        })
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get("username")
+        password = cleaned_data.get("password")
+
+        if username and password:
+            try:
+                user = User.objects.get(username=username, password=password)
+                cleaned_data["user"] = user
+            except User.DoesNotExist:
+                raise ValidationError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง")
+
+        return cleaned_data
