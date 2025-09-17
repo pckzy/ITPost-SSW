@@ -61,7 +61,6 @@ class MainView(View):
     def get(self, request):
         user_id = request.session.get('user_id')
         user = User.objects.get(pk=user_id)
-        print(user)
         return render(request, 'main.html', {
             'user': user
         })
@@ -78,4 +77,8 @@ class LogoutView(View):
 
 class CreateView(View):
     def get(self, request):
-        return render(request, 'create_post.html')
+        user_id = request.session.get('user_id')
+        user = User.objects.get(pk=user_id)
+        return render(request, 'create_post.html', {
+            'user': user
+        })

@@ -3,7 +3,132 @@
 {% load static %}
 
 {% block content %}
-<div class="">
-    <h3 class="text-3xl">Create post</h3>
+<div class="bg-white">
+    <div class="flex items-center border rounded-lg">
+        <img class="h-40 w-40 rounded-full" src="{{ MEDIA_URL }}profile.png" alt="Profile">
+        <div class="ml-3">
+            <div class="text-2xl font-medium">{{ user.get_full_name }}</div>
+            <div class="text-xl text-gray-400">{{ user.get_user_detail }}</div>
+        </div>
+    </div>
 </div>
+<div class="border rounded-lg bg-white">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="space-y-4 ">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 p-4">
+                <div class="">
+                    <label for="{{ user_form.username.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">ชนิดของโพสต์</label>
+                    <select name="" id="test1" multiple>
+                        <option value=""> เลือก </option>
+                        <option value="1"> ประกาศสำคัญ </option>
+                        <option value="2"> กิจกรรม </option>
+                        <option value="3"> พูดคุย </option>
+                    </select>
+                </div>
+                <div class="">
+                    <label for="{{ user_form.password.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">ชั้นปี</label>
+                    <select name="" id="test2" multiple>
+                        <option value=""> เลือก </option>
+                        <option value="1"> ปี 1 </option>
+                        <option value="2"> ปี 2 </option>
+                        <option value="3"> ปี 3 </option>
+                        <option value="4"> ปี 4 </option>
+                    </select>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label for="{{ user_form.password.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">สาขา</label>
+                    <select name="" id="test3" multiple>
+                        <option value=""> เลือก </option>
+                        <option value="1"> IT </option>
+                        <option value="2"> DSBA </option>
+                        <option value="3"> AIT </option>
+                        <option value="4"> BIT </option>
+                    </select>
+                </div>
+                <div class="col-span-3">
+                    <label for="{{ user_form.password.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">แขนง</label>
+                    <select name="" id="test4" multiple>
+                        <option value=""> เลือก </option>
+                        <option value="1"> Software Engineer </option>
+                        <option value="2"> Network </option>
+                        <option value="3"> Multimedia </option>
+                        <option value="4"> Data Analyst </option>
+                        <option value="5"> Data Engineer </option>
+                    </select>
+                </div>
+            </div>
+            <!-- <div class="grid grid-cols-1 gap-2 px-4">
+                <div class="">
+                    <label for="{{ user_form.password.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">แขนง</label>
+                    <select name="" id="test4" multiple>
+                        <option value=""> เลือก </option>
+                        <option value="1"> Software Engineer </option>
+                        <option value="2"> Network </option>
+                        <option value="3"> Multimedia </option>
+                        <option value="4"> Data Analyst </option>
+                        <option value="5"> Data Engineer </option>
+                    </select>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- <div class="grid grid-cols-2 gap-2 p-4"> -->
+            <div class="flex justify-between items-center p-4">
+                <div class="">
+                    <div class="text-3xl">อัปโหลดไฟล์</div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="{% url 'main_view' %}"
+                    class="text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-md px-10 py-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 cursor-pointer">ยกเลิก</a>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-3 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 cursor-pointer">ยืนยัน</button>
+                </div>
+            </div>
+        <!-- </div> -->
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@4.0.1/dist/js/multi-select-tag.min.js"></script>
+
+<script>
+    var tagSelector = new MultiSelectTag('test1', {
+        maxSelection: 1,              // default unlimited.
+        required: true,               // default false.
+        placeholder: 'เ',   // default 'Search'.
+        onChange: function(selected) { // Callback when selection changes.
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('test2', {
+        maxSelection: 4,              // default unlimited.
+        required: true,               // default false.
+        placeholder: 'เ',   // default 'Search'.
+        onChange: function(selected) { // Callback when selection changes.
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('test3', {
+        maxSelection: 4,              // default unlimited.
+        required: true,               // default false.
+        placeholder: 'เ',   // default 'Search'.
+        onChange: function(selected) { // Callback when selection changes.
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('test4', {
+        maxSelection: 5,              // default unlimited.
+        required: true,               // default false.
+        placeholder: 'เ',   // default 'Search'.
+        onChange: function(selected) { // Callback when selection changes.
+            console.log('Selection changed:', selected);
+        }
+    });
+</script>
 {% endblock %}
