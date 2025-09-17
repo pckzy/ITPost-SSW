@@ -27,13 +27,19 @@
                 {{ user_form.last_name }}
             </div>
             <div>
-                <label for="{{ user_form.email.id_for_label }}"
-                    class="block mb-2 text-md font-medium text-gray-900">อีเมล</label>
+                <div class="flex text-sm text-red-500 mt-1 justify-between">
+                    <label for="{{ user_form.email.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">อีเมล</label>
+                    {{ user_form.email.errors }}
+                </div>
                 {{ user_form.email }}
             </div>
             <div>
-                <label for="{{ user_form.username.id_for_label }}"
-                    class="block mb-2 text-md font-medium text-gray-900">ชื่อผู้ใช้ (รหัสนักศึกษา)</label>
+                <div class="flex text-sm text-red-500 mt-1 justify-between">
+                    <label for="{{ user_form.email.id_for_label }}"
+                        class="block mb-2 text-md font-medium text-gray-900">ชื่อผู้ใช้ (รหัสนักศึกษา)</label>
+                    {{ user_form.username.errors }}
+                </div>
                 {{ user_form.username }}
             </div>
             <div>
@@ -53,7 +59,7 @@
                     {{ academic_form.major }}
                 </div>
             </div>
-            <div>
+            <div id="specialization-div" style="display:none;">
                 <label for="{{ academic_form.specialization.id_for_label }}"
                     class="block mb-2 text-md font-medium text-gray-900">แขนง</label>
                 {{ academic_form.specialization }}
@@ -70,4 +76,14 @@
 </div>
 
 
+{% endblock %}
+
+
+{% block script %}
+<script>
+  const yearId = "{{ academic_form.year.id_for_label }}";
+  const majorId = "{{ academic_form.major.id_for_label }}";
+  const specializationId = "{{ academic_form.specialization.id_for_label }}";
+</script>
+<script src="{% static 'js/register.js' %}"></script>
 {% endblock %}
