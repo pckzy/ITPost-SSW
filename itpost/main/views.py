@@ -6,26 +6,41 @@ from django.http import HttpResponse
 
 from .models import *
 from main.forms import *
-from django.forms import modelformset_factory
-
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
 
 def landing_page(request):
     return render(request, "main_page.html")
 
 class LoginView(View):
     def get(self, request):
-        return
+        return render(request, "main_page.html")
 
     def post(self, request):
         return
     
 class RegisterView(View):
     def get(self, request):
-        return
+        user_form = UserForm()
+        academic_form = AcademicInfoForm()
 
+        return render(request, "register.html", {
+            'user_form': user_form,
+            'academic_form': academic_form
+        })
 
     def post(self, request):
-        return
-
+        user_form = UserForm(request.POST)
+        academic_form = AcademicInfoForm(request.POST)
+        
+        if user_form.is_valid() and academic_form.is_valid():
+            user = user_form.save()
+            
+            academic = academic_form.save(commit=False)
+            academic.user = user
+            academic.save()
+            
+            return redirect("/login")
+        
+        return render(request, "register.html", {
+            'user_form': user_form,
+            'academic_form': academic_form
+        })

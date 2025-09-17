@@ -8,6 +8,10 @@
 </head>
 
 <body class="bg-gradient-to-t from-[#011A4F] to-[#023BB5] w-screen h-screen">
-    {% block content %}{% endblock %}
+    <main class="flex justify-center items-center h-screen font-prompt">
+        <div class="bg-white items-center rounded-xl px-10 py-8 max-w-md w-full">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
 </body>
 </html>
