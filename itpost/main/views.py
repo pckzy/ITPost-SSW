@@ -8,21 +8,41 @@ from .models import *
 from main.forms import *
 
 def landing_page(request):
-    return render(request, "main_page.html")
+    return render(request, 'main_page.html')
 
 class LoginView(View):
     def get(self, request):
-        return render(request, "main_page.html")
+        user_form = UserForm()
+
+        return render(request, 'login.html', {
+            'error': False,
+            'user_form': user_form
+        })
 
     def post(self, request):
-        return
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(username=username, password=password)
+            request.session['user_id'] = user.id
+            return redirect('/test')
+        except User.DoesNotExist:
+            user_form = UserForm()
+            return render(request, 'login.html', {
+                'error': True,
+                'user_form': user_form
+            })
+
+        
+        return redirect('/register')
     
 class RegisterView(View):
     def get(self, request):
         user_form = UserForm()
         academic_form = AcademicInfoForm()
 
-        return render(request, "register.html", {
+        return render(request, 'register.html', {
             'user_form': user_form,
             'academic_form': academic_form
         })
@@ -38,9 +58,16 @@ class RegisterView(View):
             academic.user = user
             academic.save()
             
-            return redirect("/login")
+            return redirect('/login')
         
-        return render(request, "register.html", {
+        return render(request, 'register.html', {
             'user_form': user_form,
             'academic_form': academic_form
         })
+
+
+class TestView(View):
+    def get(self, request):
+        return render(request, 'test.html')
+    def post(self, request):
+        return

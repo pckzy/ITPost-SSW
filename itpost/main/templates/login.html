@@ -1,0 +1,77 @@
+{% extends "auth_base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="flex relative justify-center items-center gap-2 mb-4">
+    <div class="block pt-12">
+        <div class="absolute -top-35 left-1/2 transform -translate-x-1/2">
+            <img src="{{ MEDIA_URL}}logo.png" alt="" class="w-[50vh]">
+        </div>
+        <h3 class="text-4xl">ลงชื่อเข้าใช้</h3>
+    </div>
+</div>
+
+{% if error %}
+<div class="my-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
+    <p><span class="font-semibold">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</span> โปรดลองอีกครั้ง</p>
+</div>
+{% endif %}
+
+<div>
+    <form method="post" action="{% url 'login_view' %}" class="space-y-5">
+        {% csrf_token %}
+        <div class="space-y-4 ">
+            <div>
+                <label for="{{ user_form.username.id_for_label }}"
+                    class="block mb-2 text-md font-medium text-gray-900">ชื่อผู้ใช้</label>
+                {{ user_form.username }}
+            </div>
+            <div>
+                <label for="{{ user_form.password.id_for_label }}"
+                    class="block mb-2 text-md font-medium text-gray-900">รหัสผ่าน</label>
+                {{ user_form.password }}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 pt-3">
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-4 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 cursor-pointer">เข้าสู่ระบบ</button>
+            <a href="{% url 'register_view' %}"
+                class="text-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-md py-4 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 cursor-pointer">สมัครสมาชิก</a>
+        </div>
+    </form>
+</div>
+
+<!-- <div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="relative bg-white shadow-lg rounded-lg p-8 pt-16 w-full max-w-md">
+        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
+            <img src="{{ MEDIA_URL }}logo.png" alt="">
+        </div>
+
+        <h3 class="text-3xl font-bold text-center mb-6">ลงชื่อเข้าใช้</h3>
+
+        <form method        {% csrf_token %}
+            <div>
+                <label for="{{ user_form.username.id_for_label }}" class="block mb-2 text-md font-medium text-gray-900">ชื่อผู้ใช้</label>
+                {{ user_form.username }}
+            </div>
+            <div>
+                <label for="{{ user_form.password.id_for_label }}" class="block mb-2 text-md font-medium text-gray-900">รหัสผ่าน</label>
+                {{ user_form.password }}
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 pt-3">
+                <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-4 focus:outline-none cursor-pointer">
+                    เข้าสู่ระบบ
+                </button>
+                <a href="{% url 'register_view' %}"
+                    </a>
+            </div>
+        </form>
+    </div>
+</div> -->
+
+
+{% endblock %}
