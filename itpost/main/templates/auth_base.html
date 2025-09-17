@@ -1,0 +1,13 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+    <title>{% block title %}IT Post{% endblock %}</title>
+</head>
+
+<body class="bg-gradient-to-t from-[#011A4F] to-[#023BB5] w-screen h-screen">
+    {% block content %}{% endblock %}
+</body>
+</html>
