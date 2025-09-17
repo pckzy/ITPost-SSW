@@ -74,3 +74,8 @@ class LogoutView(View):
     def get(self, request):
         request.session.flush()
         return redirect('/login')
+    
+
+class CreateView(View):
+    def get(self, request):
+        return render(request, 'create_post.html')
