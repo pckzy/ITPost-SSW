@@ -30,6 +30,9 @@ class User(models.Model):
     
     def get_user_detail(self):
         return f"{self.role.name} - ({self.academic_info.major.code})"
+    
+    def get_post_name(self):
+        return f"{self.first_name} {self.last_name} - ({self.academic_info.major.code})"
 
 
 class Major(models.Model):

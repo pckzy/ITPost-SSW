@@ -62,7 +62,7 @@ class MainView(View):
         user_id = request.session.get('user_id')
         user = User.objects.get(pk=user_id)
         posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
-        return render(request, 'main.html', {
+        return render(request, 'all_post.html', {
             'user': user,
             'posts': posts
         })
@@ -112,3 +112,13 @@ class CreateView(View):
                 'user': user,
                 'create_form': create_form
             })
+
+# class TestView(View):
+#     def get(self, request):
+#         user_id = request.session.get('user_id')
+#         user = User.objects.get(pk=user_id)
+#         posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
+#         return render(request, 'main.html', {
+#             'user': user,
+#             'posts': posts
+#         })
