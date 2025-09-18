@@ -80,3 +80,28 @@ class LoginForm(forms.Form):
                 raise ValidationError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง")
 
         return cleaned_data
+    
+
+class CreatePostForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['post_type'].empty_label = None
+
+        if user and user.role.id == 3:
+            self.fields['post_type'].queryset = PostType.objects.filter(id__gt=1).order_by('-id')
+
+    class Meta:
+        model = Post
+        fields = ['post_type', 'years', 'majors', 'specializations', 'title', 'content']
+        widgets = {
+            'post_type': forms.Select(),
+            'title': forms.TextInput(attrs={
+                'class': 'w-full border border-[#e5e7eb] rounded text-xl leading-5 bg-white p-2'
+            }),
+            'content': forms.Textarea(attrs={
+                'class': 'w-full border border-[#e5e7eb] rounded text-md leading-5 bg-white p-2',
+                'rows': 6,
+            })
+        }
+    

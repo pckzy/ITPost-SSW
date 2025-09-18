@@ -45,7 +45,7 @@ class Specialization(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.name} ({self.major.code})"
+        return f"{self.name}"
 
 
 class AcademicInfo(models.Model):
@@ -57,3 +57,40 @@ class AcademicInfo(models.Model):
     def __str__(self):
         spec = self.specialization.name if self.specialization else "ไม่มีแขนง"
         return f"{self.user.username} - {self.major.name} - {spec} (Year {self.year})"
+
+
+class PostType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField(blank=True)
+    post_type = models.ForeignKey(PostType, on_delete=models.SET_NULL, null=True)
+    liked_by = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    years = models.ManyToManyField('YearOption', blank=True)
+    majors = models.ManyToManyField(Major, blank=True)
+    specializations = models.ManyToManyField(Specialization, blank=True)
+
+    annonymouse = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+    
+    def like_count(self):
+            return self.liked_by.count()
+
+
+
+class YearOption(models.Model):
+    year = models.PositiveIntegerField(choices=[(i, f'ปี {i}') for i in range(1, 5)], unique=True)
+
+    def __str__(self):
+        return f"ปี {self.year}"

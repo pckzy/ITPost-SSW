@@ -79,6 +79,29 @@ class CreateView(View):
     def get(self, request):
         user_id = request.session.get('user_id')
         user = User.objects.get(pk=user_id)
+
+        create_form = CreatePostForm(user=user)
+
         return render(request, 'create_post.html', {
-            'user': user
+            'user': user,
+            'create_form': create_form
         })
+    
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        user = User.objects.get(pk=user_id)
+
+        create_form = CreatePostForm(request.POST, user=user)
+
+        if create_form.is_valid():
+            post = create_form.save(commit=False)
+            post.created_by = user
+            post.save()
+            create_form.save_m2m()
+            return redirect('/')
+        else:
+            print("Form errors:", create_form.errors)
+            return render(request, 'create_post.html', {
+                'user': user,
+                'create_form': create_form
+            })
