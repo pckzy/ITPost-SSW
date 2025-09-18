@@ -1,9 +1,51 @@
 {% extends "board_base.html" %}
 
 {% load static %}
+{% load custom_filter %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+{% endblock %}
 
 {% block content %}
-<div class="">
-    <h3 class="text-3xl">Main</h3>
-</div>
+{% for post in posts %}
+    <div class="rounded-xl p-4 mb-4 bg-white shadow">
+        <h2 class="text-xl font-bold text-gray-800">{{ post.title }}</h2>
+        <p class="text-gray-700 mb-2">{{ post.content }}</p>
+        <p class="text-sm text-gray-500">โดย {{ post.created_by.get_full_name }} | {{ post.created_at|date:"d M Y H:i" }}</p>
+
+        {% if post.files.all %}
+        <h3 class="mt-3 font-semibold text-gray-800">ไฟล์แนบ:</h3>
+        <ul class="list-disc pl-5 text-blue-600">
+            {% for file in post.files.all %}
+            <li>
+                {% if file.file.name|lower|ends_with:".jpg" or file.file.name|lower|ends_with:".jpeg" or file.file.name|lower|ends_with:".png" or file.file.name|lower|ends_with:".gif" %}
+                    <a href="{{ file.file.url }}" target="_blank">
+                        <img src="{{ file.file.url }}" alt="Preview of {{ file.file.name }}" style="width: 100px; height: auto;">
+                    </a>
+                {% elif file.file.name|lower|ends_with:".pdf" %}
+                    <a href="{{ file.file.url }}" target="_blank">
+                        <i class="fas fa-file-pdf"></i>
+                        {{ file.file.name|remove_prefix:"uploads/" }}
+                    </a>
+                {% elif file.file.name|lower|ends_with:".docx" %}
+                    <a href="{{ file.file.url }}" target="_blank">
+                        <i class="fas fa-file-word"></i>
+                        {{ file.file.name|remove_prefix:"uploads/" }}
+                    </a>
+                {% else %}
+                    <a href="{{ file.file.url }}" target="_blank">
+                        {{ file.file.name|remove_prefix:"uploads/" }}
+                    </a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-gray-500">ไม่มีไฟล์แนบ</p>
+        {% endif %}
+    </div>
+{% empty %}
+    <p class="text-gray-500">ยังไม่มีโพสต์</p>
+{% endfor %}
 {% endblock %}

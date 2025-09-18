@@ -89,7 +89,7 @@ class CreatePostForm(forms.ModelForm):
         self.fields['post_type'].empty_label = None
 
         if user and user.role.id == 3:
-            self.fields['post_type'].queryset = PostType.objects.filter(id__gt=1).order_by('-id')
+            self.fields['post_type'].queryset = PostType.objects.filter(id=3)
 
     class Meta:
         model = Post

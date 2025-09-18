@@ -61,8 +61,10 @@ class MainView(View):
     def get(self, request):
         user_id = request.session.get('user_id')
         user = User.objects.get(pk=user_id)
+        posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
         return render(request, 'main.html', {
-            'user': user
+            'user': user,
+            'posts': posts
         })
     
     def post(self, request):
@@ -91,13 +93,18 @@ class CreateView(View):
         user_id = request.session.get('user_id')
         user = User.objects.get(pk=user_id)
 
-        create_form = CreatePostForm(request.POST, user=user)
+        create_form = CreatePostForm(request.POST, request.FILES, user=user)
 
         if create_form.is_valid():
             post = create_form.save(commit=False)
             post.created_by = user
             post.save()
             create_form.save_m2m()
+
+            print("FILES:", request.FILES.getlist('files'))
+            for f in request.FILES.getlist('files'):
+                PostFile.objects.create(post=post, file=f)
+
             return redirect('/')
         else:
             print("Form errors:", create_form.errors)

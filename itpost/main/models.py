@@ -79,13 +79,22 @@ class Post(models.Model):
     majors = models.ManyToManyField(Major, blank=True)
     specializations = models.ManyToManyField(Specialization, blank=True)
 
-    annonymouse = models.BooleanField(default=False)
+    annonymous = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
     
     def like_count(self):
             return self.liked_by.count()
+    
+
+class PostFile(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file.name
 
 
 
@@ -94,3 +103,5 @@ class YearOption(models.Model):
 
     def __str__(self):
         return f"ปี {self.year}"
+
+

@@ -4,6 +4,9 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+    {% block head %}
+    
+    {% endblock %}
     <title>{% block title %}IT Post{% endblock %}</title>
     <style>
         /* .gradient-bg {

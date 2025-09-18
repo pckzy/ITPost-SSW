@@ -13,7 +13,7 @@
     </div>
 </div> -->
 <div class="rounded-[24px] bg-white">
-    <form action="{% url 'create_view' %}" method="post">
+    <form action="{% url 'create_view' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="">
             <div class="px-6 pt-6">
@@ -68,15 +68,15 @@
                     </div>
                 </div>
 
-                <!-- <div class="grid grid-cols-1 gap-2 items-end">
+                <div class="grid grid-cols-1 gap-2 items-end">
                     <div class="">
                         <label for=""
                             class="block mb-2 text-lg font-medium text-gray-900">ไฟล์ประกอบ</label>
-                        <input type="file" name="" id=""
+                        <input type="file" name="files" id=""
                             class="w-full file:mr-3 file:py-2 file:px-4 hover:file:bg-gray-700 text-md rounded-md file:bg-gray-800 file:text-white border border-gray-200"
                             multiple>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
 
