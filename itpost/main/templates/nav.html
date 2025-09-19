@@ -18,8 +18,10 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
+                        <a href="{% url 'main_view' %}">
                         <img src="https://www.it.kmitl.ac.th/images/nav-eng.svg" alt="KMITL IT"
                             class="h-8 w-auto brightness-0 invert">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -68,7 +70,7 @@
                             </div>
                         </div>
                         <div class="py-2">
-                            <a href="#"
+                            <a href="{% url 'profile_view' user.username %}"
                                 class="flex items-center px-4 py-2 text-sm hover:bg-blue-700 transition duration-150">
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

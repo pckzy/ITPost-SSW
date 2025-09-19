@@ -1,0 +1,47 @@
+{% extends "board_base.html" %}
+
+{% load static %}
+{% load custom_filter %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="rounded-xl p-4 mb-4 bg-white shadow">
+    <div class="flex items-center rounded-lg"> 
+        <img class="w-25 h-25 rounded-full border-4" src="{{ MEDIA_URL }}profile.png" alt="Profile">
+        <div class="w-full ml-3">
+            <div class="flex-col ">
+                <div class="text-xl font-medium">{{ user.get_full_name }}</div>
+                <div class="text-sm font-100 ml-2">@{{ user.username }}</div>
+                <div class="text-sm font-100 ml-2">Email: {{ user.email }}</div>
+            </div>
+            <div class="w-full grid grid-cols-2 mt-2">
+                <div class="flex flex-wrap gap-1 text-sm ">
+                    <span class="text-white text-nowrap bg-green-600 rounded-full px-5 py-1"> {{ user.role }}</span>
+                    <span class="text-white text-nowrap bg-blue-600 rounded-full px-5 py-1">{{ academic_info.major.name }}</span>
+                    {% if academic_info.specialization %}
+                    <span class="text-white text-nowrap bg-yellow-500 rounded-full px-4 py-1">{{ academic_info.specialization.name }}</span>
+                    {% endif %}
+                    <span class="text-white text-nowrap bg-gray-600 rounded-full px-3 py-1">ปี{{ academic_info.year }}</span>
+                </div>
+                <div class="flex justify-end">
+                    {% if can_edit %}
+                    <a href="" class="text-sm text-blue-600 hover:underline flex items-center">
+                        <i class="fa fa-edit mr-1"></i> แก้ไขโปรไฟล์ </a>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+{%endblock %}

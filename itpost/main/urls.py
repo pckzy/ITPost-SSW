@@ -9,4 +9,5 @@ urlpatterns = [
     path("create/", views.CreateView.as_view(), name="create_view"),
     # path("test/", views.TestView.as_view(), name="test_view"),
     path("", views.MainView.as_view(), name="main_view"),
+    path("profile/<str:username>/", views.ProfileView.as_view(), name="profile_view"),
 ]

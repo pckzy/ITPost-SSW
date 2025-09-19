@@ -112,6 +112,22 @@ class CreateView(View):
                 'user': user,
                 'create_form': create_form
             })
+        
+class ProfileView(View):
+    def get(self, request, username):
+        user = User.objects.get(username=username)
+        academic_info = AcademicInfo.objects.get(user=user)
+        user_posts = Post.objects.filter(created_by=user).prefetch_related('files').order_by('-created_at')
+        can_edit = False
+        if user.id == request.session.get('user_id'):
+            can_edit = True
+
+        return render(request, 'profile.html', {
+            'user': user,
+            'academic_info': academic_info,
+            'user_posts': user_posts,
+            'can_edit': can_edit
+        })
 
 # class TestView(View):
 #     def get(self, request):
