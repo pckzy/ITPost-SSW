@@ -3,9 +3,13 @@ from django.views import View
 from django.db.models import Value, Count, Q
 from django.db.models.functions import Concat
 from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from .models import *
 from main.forms import *
+from .serializers import *
 
 
 class LoginView(View):
@@ -129,12 +133,40 @@ class ProfileView(View):
             'can_edit': can_edit
         })
 
-# class TestView(View):
-#     def get(self, request):
-#         user_id = request.session.get('user_id')
-#         user = User.objects.get(pk=user_id)
-#         posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
-#         return render(request, 'main.html', {
-#             'user': user,
-#             'posts': posts
-#         })
+class TestView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+        user = User.objects.get(pk=user_id)
+        posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
+        return render(request, 'test.html', {
+            'user': user,
+            'posts': posts
+        })
+    
+
+class PostCommentView(APIView):
+    def get(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+
+        comments = Comment.objects.filter(post=post).order_by("-created_at")
+        serializer = CommentSerializer(comments, many=True)
+        return Response({
+            "success": True,
+            "post_title": post.title,
+            "comments": serializer.data
+        })
+    
+    def post(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+
+        user_id = request.session.get("user_id")
+        user = User.objects.get(pk=user_id)
+
+        comment = Comment.objects.create(
+            post=post,
+            user=user,
+            content=request.data.get("content", "")
+        )
+
+        serializer = CommentSerializer(comment)
+        return Response({"success": True, "comment": serializer.data}, status=201)
