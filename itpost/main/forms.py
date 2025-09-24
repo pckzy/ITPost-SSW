@@ -93,7 +93,7 @@ class CreatePostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['post_type', 'years', 'majors', 'specializations', 'title', 'content']
+        fields = ['post_type', 'years', 'majors', 'specializations', 'title', 'content', 'annonymous']
         widgets = {
             'post_type': forms.Select(),
             'title': forms.TextInput(attrs={
@@ -102,6 +102,9 @@ class CreatePostForm(forms.ModelForm):
             'content': forms.Textarea(attrs={
                 'class': 'w-full border border-[#e5e7eb] rounded text-md leading-5 bg-white p-2',
                 'rows': 6,
-            })
+            }),
+            'annonymous': forms.CheckboxInput(attrs={
+                'class': 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            }),
         }
     

@@ -87,7 +87,6 @@ class CreateView(View):
         user = User.objects.get(pk=user_id)
 
         create_form = CreatePostForm(user=user)
-
         return render(request, 'create_post.html', {
             'user': user,
             'create_form': create_form

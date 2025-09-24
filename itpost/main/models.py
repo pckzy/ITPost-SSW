@@ -32,7 +32,10 @@ class User(models.Model):
         return f"{self.role.name} - ({self.academic_info.major.code})"
     
     def get_post_name(self):
-        return f"{self.first_name} {self.last_name} - ({self.academic_info.major.code})"
+        if self.role.name == 'Student':
+            return f"{self.first_name} {self.last_name} - ({self.academic_info.major.code})"
+        else:
+            return f"{self.first_name} {self.last_name} - ({self.role.name})"
 
 
 class Major(models.Model):

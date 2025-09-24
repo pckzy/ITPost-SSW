@@ -40,12 +40,16 @@
                                 class="text-red-600">*</span></label>
                         {{ create_form.majors }}
                     </div>
-                    <div class="col-span-10 md:col-span-13">
+                    <div class="col-span-10 md:col-span-13" id="specializations-field">
                         <label for="{{ create_form.specializations.id_for_label }}"
                             class="block mb-2 text-lg font-medium text-gray-900">แขนง</label>
                         {{ create_form.specializations }}
                     </div>
-                </div>
+                    <div class="col-span-10 md:col-span-3 flex items-center pt-7" id="annonymous-field" style="display: none;">
+                        <label for="{{ create_form.annonymous.id_for_label }}"
+                            class="mb-0 text-xl text-gray-900 mx-3">ไม่ระบุตัวตน</label>
+                        {{ create_form.annonymous }}
+                    </div>
             </div>
         </div>
         <div class="">
@@ -96,12 +100,28 @@
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@4.0.1/dist/js/multi-select-tag.min.js"></script>
 
 <script>
+    function showAnnonymous() {
+        document.getElementById('annonymous-field').style.display = 'flex';
+        document.getElementById('specializations-field').classList.remove('md:col-span-13');
+        document.getElementById('specializations-field').classList.add('md:col-span-10');
+    }
+    function hideAnnonymous() {
+        document.getElementById('annonymous-field').style.display = 'none';
+        document.getElementById('specializations-field').classList.remove('md:col-span-10');
+        document.getElementById('specializations-field').classList.add('md:col-span-13');
+    }
+
     var tagSelector = new MultiSelectTag('id_post_type', {
         maxSelection: 1,
         required: true,
         placeholder: '.',
         onChange: function (selected) {
             console.log('Selection changed:', selected);
+            if (selected.length > 0 && selected[0]['id'] == 3) {
+                showAnnonymous();
+            } else {
+                hideAnnonymous();
+            }
         }
     });
     var tagSelector = new MultiSelectTag('id_years', {
@@ -128,5 +148,14 @@
             console.log('Selection changed:', selected);
         }
     });
+
+   if (document.getElementById('id_post_type').value) {
+        var selected = JSON.parse(document.getElementById('id_post_type').value);
+        if (selected == 3) {
+            showAnnonymous();
+        } else {
+            hideAnnonymous();
+        }
+    }
 </script>
 {% endblock %}

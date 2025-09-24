@@ -15,7 +15,11 @@
         <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{{ MEDIA_URL }}profile.png" alt="Profile">
         <div class="ml-3 flex-1">
             <div class="">
-                <div class="text-xl font-medium text-gray-800"><a href="{% url 'profile_view' post.created_by.username %}">{{ post.created_by.get_post_name }}</a></div>
+                {% if post.annonymous %}
+                    <div class="text-xl font-medium text-gray-800 select-none">ไม่ระบุตัวตน</div>
+                {% else %}
+                    <div class="text-xl font-medium text-gray-800"><a href="{% url 'profile_view' post.created_by.username %}">{{ post.created_by.get_post_name }}</a></div>
+                {% endif %}
             </div>
             <div class="text-sm text-gray-500 my-1 flex flex-wrap items-center gap-1">
                 {% if post.post_type.id == 1 %}
