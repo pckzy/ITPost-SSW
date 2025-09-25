@@ -29,7 +29,10 @@ class User(models.Model):
         return f"{self.first_name} {self.last_name}"
     
     def get_user_detail(self):
-        return f"{self.role.name} - ({self.academic_info.major.code})"
+        if self.role.name == 'Student':
+            return f"{self.role.name} - ({self.academic_info.major.code})"
+        else:
+            return f"{self.role.name}"
     
     def get_post_name(self):
         if self.role.name == 'Student':

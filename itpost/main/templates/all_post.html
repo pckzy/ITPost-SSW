@@ -96,10 +96,14 @@
     <hr class="mt-4 border-gray-200">
     <div class="flex justify-between mt-4">
         <div class="flex gap-6">
-            <button class="flex items-center gap-2 text-gray-600 hover:text-red-500 transition-colors cursor-pointer duration-200 transform hover:scale-110">
-                <i class="far fa-heart text-xl"></i>
-                <span>69</span>
-            </button>
+                <button data-post-id="{{ post.id }}" class="like-btn flex items-center gap-2 text-gray-600 hover:text-red-500 transition-colors cursor-pointer duration-200 transform hover:scale-110">
+                    {% if user in post.liked_by.all %}
+                    <i class="fas fa-heart text-red-500 text-xl"></i>
+                    {% else %}
+                    <i class="far fa-heart text-xl"></i>
+                    {% endif %}
+                    <span class="like-count">{{ post.liked_by.count }}</span>
+                </button>
             <button class="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors cursor-pointer duration-200 transform hover:scale-110">
                 <i data-post-id="{{ post.id }}" class="comment-btn far fa-comment text-xl"></i>
                 <span>{{ post.comments.count }}</span>
@@ -358,5 +362,37 @@
             cancelDeletePost();
         }
     }
+
+    // Like button handler
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.like-btn');
+        if (!btn) return;
+        var postId = btn.getAttribute('data-post-id');
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        var headers = {};
+        if (csrf) headers['X-CSRFToken'] = csrf.value;
+
+        fetch(`/post/${postId}/like/`, {
+            method: 'POST',
+            headers: headers
+        }).then(r => r.json()).then(data => {
+            if (data.success) {
+                var countEl = btn.querySelector('.like-count');
+                if (countEl) countEl.textContent = data.count;
+                var icon = btn.querySelector('i');
+                if (icon) {
+                    if (data.liked) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-red-500');
+                    } else {
+                        icon.classList.remove('fas', 'text-red-500');
+                        icon.classList.add('far');
+                    }
+                }
+            } else {
+                alert('Error liking post: ' + (data.error || 'unknown'));
+            }
+        });
+    });
 </script>
 {% endblock %}

@@ -178,3 +178,19 @@ class PostCommentView(APIView):
 
         serializer = CommentSerializer(comment)
         return Response({"success": True, "comment": serializer.data}, status=201)
+
+
+class ToggleLikeView(APIView):
+    def post(self, request, post_id):
+        user_id = request.session.get('user_id')
+        user = User.objects.get(pk=user_id)
+        post = Post.objects.get(pk=post_id)
+
+        if user in post.liked_by.all():
+            post.liked_by.remove(user)
+            liked = False
+        else:
+            post.liked_by.add(user)
+            liked = True
+
+        return Response({'success': True, 'liked': liked, 'count': post.liked_by.count()})
