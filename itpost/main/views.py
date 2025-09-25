@@ -194,3 +194,11 @@ class ToggleLikeView(APIView):
             liked = True
 
         return Response({'success': True, 'liked': liked, 'count': post.liked_by.count()})
+
+
+class DeletePostView(APIView):
+    def post(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+        post.delete()
+        
+        return Response({'success': True})
