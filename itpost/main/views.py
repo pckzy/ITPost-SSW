@@ -64,10 +64,12 @@ class RegisterView(View):
 class MainView(View):
     def get(self, request):
         user_id = request.session.get('user_id')
+        user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(pk=user_id)
         posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
         return render(request, 'all_post.html', {
             'user': user,
+            'user_logged': user_logged,
             'posts': posts
         })
     
@@ -84,11 +86,13 @@ class LogoutView(View):
 class CreateView(View):
     def get(self, request):
         user_id = request.session.get('user_id')
+        user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(pk=user_id)
 
         create_form = CreatePostForm(user=user)
         return render(request, 'create_post.html', {
             'user': user,
+            'user_logged': user_logged,
             'create_form': create_form
         })
     
@@ -118,28 +122,38 @@ class CreateView(View):
         
 class ProfileView(View):
     def get(self, request, username):
+        user_id = request.session.get('user_id')
+        user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(username=username)
         print("User Role:", user.role)
         if user.role.name == 'Student':
             academic_info = AcademicInfo.objects.get(user=user)
-        user_posts = Post.objects.filter(created_by=user).prefetch_related('files').order_by('-created_at')
+
+        if user == user_logged or user_logged.role.id == 1:
+            user_posts = Post.objects.filter(created_by=user).prefetch_related('files').order_by('-created_at')
+        else:
+            user_posts = Post.objects.filter(created_by=user, annonymous=False).prefetch_related('files').order_by('-created_at')
+
+        
         can_edit = False
         if user.id == request.session.get('user_id'):
             can_edit = True
 
+        stats = {
+            'total': user_posts.count()
+        }
+
+        context = {
+            'user_logged': user_logged,
+            'user': user,
+            'posts': user_posts,
+            'can_edit': can_edit,
+            'stats': stats
+        }
+
         if user.role.name == 'Student':
-            return render(request, 'profile.html', {
-                'user': user,
-                'academic_info': academic_info,
-                'user_posts': user_posts,
-                'can_edit': can_edit
-            })
-        else:
-            return render(request, 'profile.html', {
-                'user': user,
-                'user_posts': user_posts,
-                'can_edit': can_edit
-            })
+            context['academic_info'] = academic_info
+        return render(request, 'profile.html', context)
 
 class TestView(View):
     def get(self, request):
