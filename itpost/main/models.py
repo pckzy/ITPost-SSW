@@ -21,6 +21,7 @@ class User(models.Model):
     role = models.ForeignKey(Role, on_delete=models.PROTECT, default=3)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    image = models.FileField(upload_to="profile/", blank=True, null=True)
 
     def __str__(self):
         return f"({self.username}) - {self.first_name} {self.last_name}"

@@ -51,7 +51,7 @@
 {% for post in posts %}
 <div id="post-{{ post.id }}" class="rounded-xl p-4 mb-6 bg-white shadow-lg">
     <div class="flex items-center rounded-lg">
-        <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{{ MEDIA_URL }}profile.png" alt="Profile">
+        <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{% if post.annonymous %} {{ MEDIA_URL }}profile.png {% else %} /media/{{ post.created_by.image }} {% endif %}" alt="Profile">
         <div class="ml-3 flex-1">
             <div class="">
                 {% if post.annonymous %}
@@ -224,7 +224,7 @@
                         <input type="hidden" name="csrfmiddlewaretoken" id="csrfToken" value="{{ csrf_token }}">
                         <div class="flex space-x-3">
                             <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
-                                 src="{{ MEDIA_URL }}profile.png" alt="Your Avatar">
+                                 src="/media/{{ user_logged.image }}" alt="Your Avatar">
                             <div class="flex-1 flex">
                                 <input 
                                     type="text" 

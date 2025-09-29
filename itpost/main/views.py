@@ -243,3 +243,39 @@ class DeletePostView(APIView):
         post.delete()
         
         return Response({'success': True})
+    
+
+class EditProfileView(View):
+    def get(self, request, username):
+        user_id = request.session.get('user_id')
+        user_logged = User.objects.get(username=username)
+
+        user_form = UserForm(instance=user_logged)
+        academic_form = AcademicInfoForm(instance=user_logged.academic_info)
+
+        context = {
+            'user_logged': user_logged,
+            'user_form': user_form,
+            'academic_form': academic_form
+        }
+        return render(request, 'edit_profile.html', context)
+    
+    def post(self, request, username):
+        user_id = request.session.get('user_id')
+        user_logged = User.objects.get(username=username)
+
+        user_form = UserForm(request.POST, request.FILES, instance=user_logged)
+        academic_form = AcademicInfoForm(request.POST, instance=user_logged.academic_info)
+
+        if user_form.is_valid() and academic_form.is_valid():
+            user_form.save()
+            academic_form.save()
+            
+            return redirect("profile_view", username=username)
+
+        context = {
+            'user_logged': user_logged,
+            'user_form': user_form,
+            'academic_form': academic_form
+        }
+        return render(request, 'edit_profile.html', context)

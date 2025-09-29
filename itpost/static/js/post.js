@@ -39,7 +39,7 @@
                         <div class="mb-3">
                             <div class="flex items-center space-x-3">
                                 <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
-                                    src="${MEDIA_URL}profile.png" alt="User">
+                                    src="/media/${comment.image}" alt="User">
                                 <div class="flex-1">
                                     <div class="flex items-baseline gap-2 mb-1">
                                         <a href="/profile/${comment.username}"><span class="font-medium text-gray-800 text-sm">${comment.user_full_name}</span></a>
@@ -85,7 +85,7 @@
                             <div class="mb-3">
                                 <div class="flex items-center space-x-3">
                                     <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
-                                        src="${MEDIA_URL}profile.png" alt="User">
+                                        src="/media/${comment.image}" alt="User">
                                     <div class="flex-1">
                                         <div class="flex items-baseline gap-2 mb-1">
                                             <a href="/profile/${data.comment.username}"><span class="font-medium text-gray-800 text-sm">${data.comment.user_full_name}</span></a>

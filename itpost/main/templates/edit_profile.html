@@ -1,0 +1,123 @@
+{% extends "board_base.html" %}
+
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        
+        <div class="bg-gradient-to-b from-[#011A4F] to-[#023BB5] text-white p-8">
+            <h1 class="text-3xl font-bold mb-2">ตั้งค่าข้อมูลโปรไฟล์</h1>
+            <p class="opacity-90">กรอกข้อมูลเพื่อแก้ไขโปรไฟล์</p>
+        </div>
+        
+        <div class="p-8">
+            <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                <div class="flex items-center space-x-4">
+                    <img src="/media/{{ user_logged.image }}" class="w-16 h-16 rounded-full" id="preview" alt="">
+                    <div>
+                        <h3 class="text-xl font-semibold">{{ user_logged.get_full_name }}</h3>
+                        <p class="text-gray-600">@{{ user_logged.username }}</p>
+                        <p class="text-gray-600">Email : {{ user_logged.email }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <form method="post" class="space-y-6" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                {% if user_form.non_field_errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {{ user_form.non_field_errors }}
+                    </div>
+                {% endif %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-lg font-medium text-gray-900 mb-2">ชื่อจริง</label>
+                        {{ user_form.first_name }}
+                        {% if user_form.first_name.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ user_form.first_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label class="block text-lg font-medium text-gray-900 mb-2">นามสกุล</label>
+                        {{ user_form.last_name }}
+                        {% if user_form.last_name.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ user_form.last_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-lg font-medium text-gray-900 mb-2">รหัสผ่าน</label>
+                    {{ user_form.password }}
+                    {% if user_form.password.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ user_form.password.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-lg font-medium text-gray-900 mb-2">ชั้นปี</label>
+                        {{ academic_form.year }}
+                        {% if academic_form.year.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ academic_form.year.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label class="block text-lg font-medium text-gray-900 mb-2">สาขา</label>
+                        {{ academic_form.major }}
+                        {% if academic_form.major.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ academic_form.major.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div id="specialization-div" style="display: none;">
+                    <label class="block text-lg font-medium text-gray-900 mb-2">แขนง</label>
+                    {{ academic_form.specialization }}
+                    {% if academic_form.specialization.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ academic_form.specialization.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="">
+                    <label for=""
+                        class="block mb-2 text-lg font-medium text-gray-900">รูปภาพโปรไฟล์</label>
+                    {{ user_form.image }}
+                </div>
+
+                <div class="hidden">
+                    {{ user_form.username }}
+                    {{ user_form.email }}
+                </div>
+
+                <div class="flex space-x-4">
+                    <a href="{% url 'profile_view' user_logged.username %}" class="flex-1 bg-gray-500 text-white py-3 px-6 rounded-lg hover:bg-gray-600 transition font-semibold text-center">
+                        ยกเลิก
+                    </a>
+                    <button type="submit" class="flex-1 bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition font-semibold">
+                        <i class="fa fa-square-check"></i> แก้ไขโปรไฟล์
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  const yearId = "{{ academic_form.year.id_for_label }}";
+  const majorId = "{{ academic_form.major.id_for_label }}";
+  const specializationId = "{{ academic_form.specialization.id_for_label }}";
+  const imageId = "{{ user_form.image.id_for_label }}"
+</script>
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@4.0.1/dist/js/multi-select-tag.min.js"></script>
+<script src="{% static 'js/edit_profile.js' %}"></script>
+{% endblock %}

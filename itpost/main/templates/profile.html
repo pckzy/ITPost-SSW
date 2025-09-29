@@ -10,7 +10,7 @@
 {% block content %}
 <div class="rounded-xl p-4 mb-6 bg-white shadow-lg">
     <div class="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-4">
-        <img class="w-24 h-24 rounded-full border-4 mb-3 sm:mb-0" src="{{ MEDIA_URL }}profile.png" alt="Profile">
+        <img class="w-24 h-24 rounded-full border mb-3 sm:mb-0" src="/media/{{ user.image }}" alt="Profile">
 
         <div class="flex-1 w-full">
             <div>
@@ -33,7 +33,7 @@
 
                 {% if can_edit %}
                 <div class="mt-2 sm:mt-0 flex justify-center sm:justify-end">
-                    <a href="" class="text-sm text-blue-600 hover:underline flex items-center">
+                    <a href="{% url 'editprofile_view' user_logged.username %}" class="text-sm text-blue-600 hover:underline flex items-center">
                         <i class="fa fa-edit mr-1"></i> แก้ไขโปรไฟล์
                     </a>
                 </div>
@@ -76,7 +76,7 @@
 {% for post in posts %}
 <div id="post-{{ post.id }}" class="rounded-xl p-4 mb-6 bg-white shadow-lg">
     <div class="flex items-center rounded-lg">
-        <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{{ MEDIA_URL }}profile.png" alt="Profile">
+        <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{% if post.annonymous %} {{ MEDIA_URL }}profile.png {% else %} /media/{{ user.image }} {% endif %}" alt="Profile">
         <div class="ml-3 flex-1">
             <div class="">
                 {% if post.annonymous %}
@@ -161,7 +161,7 @@
     <div class="flex justify-between mt-4">
         <div class="flex gap-6">
                 <button data-post-id="{{ post.id }}" class="like-btn flex items-center gap-2 text-gray-600 hover:text-red-500 transition-colors cursor-pointer duration-200 transform hover:scale-110">
-                    {% if user in post.liked_by.all %}
+                    {% if user_logged in post.liked_by.all %}
                     <i class="fas fa-heart text-red-500 text-xl"></i>
                     {% else %}
                     <i class="far fa-heart text-xl"></i>

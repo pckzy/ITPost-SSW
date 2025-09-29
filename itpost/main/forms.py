@@ -7,7 +7,7 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'first_name', 'last_name', 'username', 'email', 'password'
+            'first_name', 'last_name', 'username', 'email', 'password', 'image'
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
@@ -15,6 +15,7 @@ class UserForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'placeholder': 'Username', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
             'email': forms.EmailInput(attrs={'placeholder': 'e.g. 6607xxx@kmitl.ac.th', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
             'password': forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'image': forms.FileInput(attrs={'class': 'w-full file:mr-3 file:py-2 file:px-4 hover:file:bg-gray-700 text-md rounded-md file:bg-gray-800 file:text-white border border-gray-200'})
         }
 
     def clean_email(self):
