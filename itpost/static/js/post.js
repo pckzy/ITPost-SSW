@@ -200,3 +200,28 @@
             }
         });
     });
+
+    var tagSelector = new MultiSelectTag('year', {
+        maxSelection: 4,
+        required: false,
+        placeholder: 'เลือกชั้นปี',
+        onChange: function (selected) {
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('major', {
+        maxSelection: 4,
+        required: false,
+        placeholder: 'เลือกสาขา',
+        onChange: function (selected) {
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('specialization', {
+        maxSelection: 5,
+        required: false,
+        placeholder: 'เลือกแขนง',
+        onChange: function (selected) {
+            console.log('Selection changed:', selected);
+        }
+    });
