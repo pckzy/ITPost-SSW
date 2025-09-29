@@ -129,6 +129,30 @@
 </div>
 {% endfor %}
 
+{% if posts.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <div class="flex items-center space-x-2">
+            {% if posts.has_previous %}
+                <a href="?page={{ posts.previous_page_number }}" 
+                   class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
+                    < ก่อนหน้า
+                </a>
+               {% endif %}
+            
+            <span class="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                หน้า {{ posts.number }} จาก {{ posts.paginator.num_pages }}
+            </span>
+            
+            {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}" 
+                   class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
+                    ถัดไป >
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
 <!-- Comment Modal -->
     <div id="commentModal" class="fixed inset-0 z-[900] hidden">
     <!-- <div id="commentModal" class="fixed inset-0 z-50 hidden"> -->

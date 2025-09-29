@@ -3,6 +3,7 @@ from django.views import View
 from django.db.models import Value, Count, Q
 from django.db.models.functions import Concat
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -66,7 +67,12 @@ class MainView(View):
         user_id = request.session.get('user_id')
         user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(pk=user_id)
-        posts = Post.objects.prefetch_related('files').all().order_by('-created_at')
+        posts_list = Post.objects.prefetch_related('files').all().order_by('-created_at')
+
+        paginator = Paginator(posts_list, 2)
+        page_number = request.GET.get('page')
+        posts = paginator.get_page(page_number)
+
         return render(request, 'all_post.html', {
             'user': user,
             'user_logged': user_logged,
