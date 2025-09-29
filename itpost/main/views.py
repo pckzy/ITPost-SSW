@@ -69,14 +69,35 @@ class MainView(View):
         user = User.objects.get(pk=user_id)
         posts_list = Post.objects.prefetch_related('files').all().order_by('-created_at')
 
-        paginator = Paginator(posts_list, 2)
+        year_query = request.GET.getlist('year')
+        major_query = request.GET.getlist('major')
+        specialization_query = request.GET.getlist('specialization')
+
+        if year_query or major_query or specialization_query:
+            if year_query:
+                posts_list = posts_list.filter(years__in=year_query).distinct()
+            if major_query:
+                posts_list = posts_list.filter(majors__in=major_query).distinct()
+            if specialization_query:
+                posts_list = posts_list.filter(specializations__in=specialization_query).distinct()
+
+        paginator = Paginator(posts_list, 5)
         page_number = request.GET.get('page')
         posts = paginator.get_page(page_number)
+
+        majors = Major.objects.all()
+        specializations = Specialization.objects.all()
 
         return render(request, 'all_post.html', {
             'user': user,
             'user_logged': user_logged,
-            'posts': posts
+            'posts': posts,
+            'years': range(1, 5),
+            'majors': majors,
+            'specializations': specializations,
+            'year_query': year_query,
+            'major_query': major_query,
+            'specialization_query': specialization_query
         })
     
     def post(self, request):

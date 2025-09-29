@@ -7,6 +7,45 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
+{% block tophead %}
+<section class="bg-gradient-to-b from-[#011A4F] to-[#023BB5] text-white py-20 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h1 class="text-5xl font-bold mb-6">กรองโพสต์ที่ตรงกับความต้องการ <i class="fa fa-filter"></i></h1>
+        <p class="text-xl mb-8 opacity-90">เลือกหลายตัวเลือกได้ ตามที่นักศึกษาต้องการ</p>
+        
+
+        <div class="max-w-5xl mx-auto bg-white rounded-2xl p-6 shadow-xl">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <select name="year" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="year" multiple>
+                        {% for i in years %}
+                            <option value="{{ i }}" {% if i|stringformat:"s" in year_query %}selected{% endif %}>ปี {{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <select name="major" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="major" multiple>
+                        {% for major in majors %}
+                            <option value="{{ major.id }}" {% if major.id|stringformat:"s" in major_query %}selected{% endif %}>{{ major.code }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <select name="specialization" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="specialization" multiple>
+                        {% for specialization in specializations %}
+                            <option value="{{ specialization.id }}" {% if specialization.id|stringformat:"s" in specialization_query %}selected{% endif %}>{{ specialization.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
+                    <i class="fa fa-magnifying-glass"></i> ค้นหา
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
 {% block content %}
 
 {% for post in posts %}
@@ -133,7 +172,7 @@
     <div class="flex justify-center mt-8">
         <div class="flex items-center space-x-2">
             {% if posts.has_previous %}
-                <a href="?page={{ posts.previous_page_number }}" 
+                <a href="?{% update_query request page=posts.previous_page_number %}" 
                    class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
                     < ก่อนหน้า
                 </a>
@@ -144,7 +183,7 @@
             </span>
             
             {% if posts.has_next %}
-                <a href="?page={{ posts.next_page_number }}" 
+                <a href="?{% update_query request page=posts.next_page_number %}" 
                    class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
                     ถัดไป >
                 </a>
@@ -243,6 +282,34 @@
 {% endblock %}
 
 {% block script %}
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@4.0.1/dist/js/multi-select-tag.min.js"></script>
+
+<script>
+    var tagSelector = new MultiSelectTag('year', {
+        maxSelection: 4,
+        required: false,
+        placeholder: 'เลือกชั้นปี',
+        onChange: function (selected) {
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('major', {
+        maxSelection: 4,
+        required: false,
+        placeholder: 'เลือกสาขา',
+        onChange: function (selected) {
+            console.log('Selection changed:', selected);
+        }
+    });
+    var tagSelector = new MultiSelectTag('specialization', {
+        maxSelection: 5,
+        required: false,
+        placeholder: 'เลือกแขนง',
+        onChange: function (selected) {
+            console.log('Selection changed:', selected);
+        }
+    });
+</script>
 <script>
     const MEDIA_URL = "{{ MEDIA_URL }}";
 </script>
