@@ -165,7 +165,7 @@ class ProfileView(View):
         user_id = request.session.get('user_id')
         user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(username=username)
-        print("User Role:", user.role)
+        
         if user.role.name == 'Student':
             academic_info = AcademicInfo.objects.get(user=user)
 
@@ -264,34 +264,147 @@ class DeletePostView(APIView):
 class EditProfileView(View):
     def get(self, request, username):
         user_id = request.session.get('user_id')
-        user_logged = User.objects.get(username=username)
-
-        user_form = UserForm(instance=user_logged)
-        academic_form = AcademicInfoForm(instance=user_logged.academic_info)
+        user_logged = User.objects.get(pk=user_id)
+        user = User.objects.get(username=username)
 
         context = {
-            'user_logged': user_logged,
-            'user_form': user_form,
-            'academic_form': academic_form
+            'user': user,
+            'user_logged': user_logged
         }
-        return render(request, 'edit_profile.html', context)
+
+        if user_logged.role.id == 3 and user_logged == user:
+            user_form = UserForm(instance=user_logged)
+            academic_form = AcademicInfoForm(instance=user_logged.academic_info)
+
+            context['user_form'] = user_form
+            context['academic_form'] = academic_form
+            return render(request, 'edit_profile.html', context)
+
+        if user_logged.role.id == 2 and user_logged == user:
+            user_form = AccountForm(instance=user_logged)
+
+            context['user_form'] = user_form
+            return render(request, 'special_edit_profile.html', context)
+
+        if user_logged.role.id == 1:
+            if user.role.id == 3:
+                user_form = UserForm(instance=user)
+                academic_form = AcademicInfoForm(instance=user.academic_info)
+                context['user_form'] = user_form
+                context['academic_form'] = academic_form
+                return render(request, 'edit_profile.html', context)
+            else:
+                user_form = AccountForm(instance=user)
+                context['user_form'] = user_form
+                return render(request, 'special_edit_profile.html', context)
+
+        return redirect('main_view')
+
     
     def post(self, request, username):
         user_id = request.session.get('user_id')
-        user_logged = User.objects.get(username=username)
+        user_logged = User.objects.get(pk=user_id)
+        user = User.objects.get(username=username)
 
-        user_form = UserForm(request.POST, request.FILES, instance=user_logged)
-        academic_form = AcademicInfoForm(request.POST, instance=user_logged.academic_info)
+        context = {
+            'user': user,
+            'user_logged': user_logged
+        }
 
-        if user_form.is_valid() and academic_form.is_valid():
-            user_form.save()
-            academic_form.save()
-            
-            return redirect("profile_view", username=username)
+        if user_logged.role.id == 3 and user_logged == user:
+            user_form = UserForm(request.POST, request.FILES, instance=user_logged)
+            academic_form = AcademicInfoForm(request.POST, instance=user_logged.academic_info)
+
+            if user_form.is_valid() and academic_form.is_valid():
+                user_form.save()
+                academic_form.save()
+                return redirect("profile_view", username=username)
+
+            context['user_form'] = user_form
+            context['academic_form'] = academic_form
+            return render(request, 'edit_profile.html', context)
+
+        if user_logged.role.id == 2 and user_logged == user:
+            user_form = AccountForm(request.POST, request.FILES, instance=user_logged)
+
+            if user_form.is_valid():
+                user_form.save()
+                new_username = user_form.cleaned_data.get('username')
+                return redirect("profile_view", username=new_username)
+
+            context['user_form'] = user_form
+            return render(request, 'special_edit_profile.html', context)
+
+        if user_logged.role.id == 1:
+            if user.role.id == 3:
+                user_form = UserForm(request.POST, request.FILES, instance=user)
+                academic_form = AcademicInfoForm(request.POST, instance=user.academic_info)
+
+                if user_form.is_valid() and academic_form.is_valid():
+                    user_form.save()
+                    academic_form.save()
+                    return redirect('admin_view')
+
+                context['user_form'] = user_form
+                context['academic_form'] = academic_form
+                return render(request, 'edit_profile.html', context)
+            else:
+                user_form = AccountForm(request.POST, request.FILES, instance=user)
+
+                if user_form.is_valid():
+                    user_form.save()
+                    return redirect('admin_view')
+
+                context['user_form'] = user_form
+                return render(request, 'special_edit_profile.html', context)
+
+        return redirect('main_view')
+    
+
+class AdminView(View):
+    def get(self, request):
+        user_id = request.session.get('user_id')
+        user_logged = User.objects.get(pk=user_id)
+        user_lists = User.objects.all().order_by('username')
+
+        if user_logged.role.id == 1:
+            forms = AccountForm()
+            posts_list = Post.objects.prefetch_related('files').filter(status='pending').order_by('-created_at')
+
+            paginator = Paginator(posts_list, 2)
+            page_number = request.GET.get('page')
+            posts = paginator.get_page(page_number)
+
+            context = {
+                'user_logged': user_logged,
+                'posts': posts,
+                'forms': forms,
+                'user_lists': user_lists,
+            }
+            return render(request, 'admin_page.html', context)
+        
+        return redirect('main_view')
+        
+    
+    def post(self, request):
+        user_id = request.session.get('user_id')
+        user_logged = User.objects.get(pk=user_id)
+        forms = AccountForm(request.POST, request.FILES)
+        posts_list = Post.objects.prefetch_related('files').all().order_by('-created_at')
+
+        paginator = Paginator(posts_list, 2)
+        page_number = request.GET.get('page')
+        posts = paginator.get_page(page_number)
 
         context = {
             'user_logged': user_logged,
-            'user_form': user_form,
-            'academic_form': academic_form
+            'posts': posts,
+            'forms': forms,
         }
-        return render(request, 'edit_profile.html', context)
+
+        if forms.is_valid():
+            forms.save()
+            return redirect('admin_view')
+        
+        return render(request, 'admin_page.html', context)
+        

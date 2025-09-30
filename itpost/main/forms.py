@@ -10,11 +10,11 @@ class UserForm(forms.ModelForm):
             'first_name', 'last_name', 'username', 'email', 'password', 'image'
         ]
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
-            'username': forms.TextInput(attrs={'placeholder': 'Username', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'ระบุชื่อจริง', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'ระบุนามสกุล', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'username': forms.TextInput(attrs={'placeholder': 'ระบุชื่อผู้ใช้', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
             'email': forms.EmailInput(attrs={'placeholder': 'e.g. 6607xxx@kmitl.ac.th', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
-            'password': forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'password': forms.PasswordInput(attrs={'placeholder': 'ระบุรหัสผ่าน', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
             'image': forms.FileInput(attrs={'class': 'w-full file:mr-3 file:py-2 file:px-4 hover:file:bg-gray-700 text-md rounded-md file:bg-gray-800 file:text-white border border-gray-200'})
         }
 
@@ -57,13 +57,13 @@ class AcademicInfoForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
-            'placeholder': 'Enter the username',
+            'placeholder': 'ชื่อผู้ใช้',
             'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
         })
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Enter the password',
+            'placeholder': 'รหัสผ่าน',
             'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
         })
     )
@@ -109,3 +109,23 @@ class CreatePostForm(forms.ModelForm):
             }),
         }
     
+
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'first_name', 'last_name', 'username', 'email', 'password', 'image', 'role'
+        ]
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'ระบุชื่อจริง', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'ระบุนามสกุล', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'username': forms.TextInput(attrs={'placeholder': 'ระบุชื่อผู้ใช้', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'e.g. 6607xxx@kmitl.ac.th', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'password': forms.PasswordInput(attrs={'placeholder': 'ระบุรหัสผ่าน', 'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}),
+            'image': forms.FileInput(attrs={'class': 'w-full file:mr-3 file:py-2 file:px-4 hover:file:bg-gray-700 text-sm rounded-md file:bg-gray-800 file:text-white border border-gray-200'}),
+            'role': forms.Select(choices=[(1, 'Admin'), (2, 'Professor')], attrs={'class': 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['role'].initial = 2

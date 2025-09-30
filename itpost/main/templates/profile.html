@@ -74,6 +74,7 @@
 </div>
 
 {% for post in posts %}
+{% if post.status == 'approved' %}
 <div id="post-{{ post.id }}" class="rounded-xl p-4 mb-6 bg-white shadow-lg">
     <div class="flex items-center rounded-lg">
         <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{% if post.annonymous %} {{ MEDIA_URL }}profile.png {% else %} /media/{{ user.image }} {% endif %}" alt="Profile">
@@ -187,6 +188,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% empty %}
 <div class="text-center py-8">
     <p class="text-gray-500 text-lg">ยังไม่มีโพสต์</p>
