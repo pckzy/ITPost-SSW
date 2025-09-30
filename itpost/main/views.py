@@ -260,7 +260,22 @@ class DeletePostView(APIView):
         
         return Response({'success': True})
     
-
+class ApprovePostView(APIView):
+    def put(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+        post.status = 'approved'
+        post.save()
+        
+        return Response({'success': True})
+    
+class RejectPostView(APIView):
+    def put(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+        post.status = 'rejected'
+        post.save()
+        
+        return Response({'success': True})
+    
 class EditProfileView(View):
     def get(self, request, username):
         user_id = request.session.get('user_id')

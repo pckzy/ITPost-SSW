@@ -3,15 +3,6 @@
 {% load static %}
 
 {% block content %}
-<!-- <div class="bg-white">
-    <div class="flex items-center border rounded-lg">
-        <img class="h-40 w-40 rounded-full" src="{{ MEDIA_URL }}profile.png" alt="Profile">
-        <div class="ml-3">
-            <div class="text-2xl font-medium">{{ user.get_full_name }}</div>
-            <div class="text-xl text-gray-400">{{ user.get_user_detail }}</div>
-        </div>
-    </div>
-</div> -->
 <div class="rounded-[24px] shadow-lg overflow-hidden">
     <div class="px-6 py-6 bg-gradient-to-b from-[#011A4F] to-[#023BB5] text-white">
         <h3 class="text-3xl font-bold">การตั้งค่าโพสต์</h3>
@@ -98,7 +89,6 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
         <div id="studentPendingModalBox" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform transition-transform duration-300 scale-20 opacity-0" aria-modal="true">
             <div class="p-6 text-center">
-                <!-- Clock icon -->
                 <div class="flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mx-auto mb-4">
                     <svg class="w-10 h-10 text-yellow-500 animate-bounce" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l4 2M12 2a10 10 0 100 20 10 10 0 000-20z" />
@@ -116,13 +106,12 @@
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@4.0.1/dist/js/multi-select-tag.min.js"></script>
 <script src="{% static 'js/create_post.js' %}"></script>
 {% if user.role.name == 'Student' %}
-<script>
+    <script>
         const form = document.getElementById('createPostForm');
         const modal = document.getElementById('studentPendingModal');
         const modalBox = document.getElementById('studentPendingModalBox');
 
-        function showModal() {     
-            // CSS transition
+        function showModal() {
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modalBox.classList.remove('scale-20', 'opacity-0');
@@ -133,8 +122,8 @@
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             showModal();
-            setTimeout(() => form.submit(), 5000);
+            setTimeout(() => form.submit(), 3000);
         });
-</script>
+    </script>
 {% endif %}
 {% endblock %}

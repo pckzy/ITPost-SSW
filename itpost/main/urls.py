@@ -15,5 +15,7 @@ urlpatterns = [
     path("comments/<int:post_id>/create/", views.PostCommentView.as_view(), name="comment_create"),
     path("post/<int:post_id>/like/", views.ToggleLikeView.as_view(), name="toggle_like"),
     path("post/<int:post_id>/delete/", views.DeletePostView.as_view(), name="delete_post"),
+    path("post/<int:post_id>/approve/", views.ApprovePostView.as_view(), name="approve_post"),
+    path("post/<int:post_id>/reject/", views.RejectPostView.as_view(), name="reject_post"),
     path("administrator/", views.AdminView.as_view(), name="admin_view"),
 ]
