@@ -338,38 +338,4 @@
 </script>
 
 <script src="{% static 'js/admin.js' %}"></script>
-<script>
-    function toggleTable() {
-        const tableDiv = document.getElementById('table-div')
-        if (tableDiv.classList.contains('max-h-0')) {
-            tableDiv.classList.remove('max-h-0')
-            tableDiv.classList.add('max-h-[1000px]')
-        } else {
-            tableDiv.classList.add('max-h-0')
-            tableDiv.classList.remove('max-h-[1000px]')
-        }
-    }
-
-    function togglePostApprove() {
-        const postApproveDiv = document.getElementById('post-approve-div')
-        if (postApproveDiv.classList.contains('max-h-0')) {
-            postApproveDiv.classList.remove('max-h-0')
-            postApproveDiv.classList.add('max-h-[1000px]')
-        } else {
-            postApproveDiv.classList.add('max-h-0')
-            postApproveDiv.classList.remove('max-h-[1000px]')
-        }
-    }
-
-    function toggleForm() {
-        const formDiv = document.getElementById('form-div')
-        if (formDiv.classList.contains('max-h-0')) {
-            formDiv.classList.remove('max-h-0')
-            formDiv.classList.add('max-h-[1000px]')
-        } else {
-            formDiv.classList.add('max-h-0')
-            formDiv.classList.remove('max-h-[1000px]')
-        }
-    }
-</script>
 {% endblock %}

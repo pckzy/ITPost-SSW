@@ -174,11 +174,6 @@ class ProfileView(View):
         else:
             user_posts = Post.objects.filter(created_by=user, annonymous=False).prefetch_related('files').order_by('-created_at')
 
-        
-        can_edit = False
-        if user.id == request.session.get('user_id'):
-            can_edit = True
-
         stats = {
             'total': user_posts.count(),
             'pending': user_posts.filter(status='pending').count(),
@@ -186,12 +181,23 @@ class ProfileView(View):
             'rejected': user_posts.filter(status='rejected').count()
         }
 
+        available_posts = user_posts.filter(status='approved')
+
+        paginator = Paginator(available_posts, 2)
+        page_number = request.GET.get('page')
+        all_posts = paginator.get_page(page_number)
+        
+        can_edit = False
+        if user.id == request.session.get('user_id'):
+            can_edit = True
+
         context = {
             'user_logged': user_logged,
             'user': user,
             'posts': user_posts,
             'can_edit': can_edit,
-            'stats': stats
+            'stats': stats,
+            'all_posts': all_posts,
         }
 
         if user.role.name == 'Student':
