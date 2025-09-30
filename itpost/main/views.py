@@ -67,7 +67,7 @@ class MainView(View):
         user_id = request.session.get('user_id')
         user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(pk=user_id)
-        posts_list = Post.objects.prefetch_related('files').filter(pending=False).order_by('-created_at')
+        posts_list = Post.objects.prefetch_related('files').filter(status='approved').order_by('-created_at')
 
         search = request.GET.get('search', '')
         year_query = request.GET.getlist('year')
@@ -142,8 +142,8 @@ class CreateView(View):
             post = create_form.save(commit=False)
             post.created_by = user
 
-            if user.role.id == 3:  # Student
-                post.pending = True
+            if user.role.id != 3:  # Student
+                post.status = 'approved'
 
             post.save()
             create_form.save_m2m()
@@ -180,7 +180,10 @@ class ProfileView(View):
             can_edit = True
 
         stats = {
-            'total': user_posts.count()
+            'total': user_posts.count(),
+            'pending': user_posts.filter(status='pending').count(),
+            'approved': user_posts.filter(status='approved').count(),
+            'rejected': user_posts.filter(status='rejected').count()
         }
 
         context = {

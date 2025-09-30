@@ -17,7 +17,7 @@
         <h3 class="text-3xl font-bold">การตั้งค่าโพสต์</h3>
         <p class="opacity-90">กรอกข้อมูลว่าใครสามารถเห็นโพสต์คุณได้</p>
     </div>
-    <form action="{% url 'create_view' %}" method="post" enctype="multipart/form-data">
+    <form id="createPostForm" action="{% url 'create_view' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="">
             <div class="py-4 px-9 md:px-11">
@@ -93,10 +93,48 @@
             </div>
         </div>
     </form>
+
+    <div id="studentPendingModal" class="fixed inset-0 z-50 flex hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div id="studentPendingModalBox" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform transition-transform duration-300 scale-20 opacity-0" aria-modal="true">
+            <div class="p-6 text-center">
+                <!-- Clock icon -->
+                <div class="flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mx-auto mb-4">
+                    <svg class="w-10 h-10 text-yellow-500 animate-bounce" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l4 2M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mb-2">รอดำเนินการ</h3>
+                <p class="text-gray-500 mb-6">โพสต์ของคุณจะถูกตรวจสอบก่อนเผยแพร่ โปรดรอการดำเนินการจากผู้ดูแลระบบ</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@4.0.1/dist/js/multi-select-tag.min.js"></script>
 <script src="{% static 'js/create_post.js' %}"></script>
+{% if user.role.name == 'Student' %}
+<script>
+        const form = document.getElementById('createPostForm');
+        const modal = document.getElementById('studentPendingModal');
+        const modalBox = document.getElementById('studentPendingModalBox');
+
+        function showModal() {     
+            // CSS transition
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalBox.classList.remove('scale-20', 'opacity-0');
+                modalBox.classList.add('scale-100', 'opacity-100');
+            }, 1);
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            showModal();
+            setTimeout(() => form.submit(), 5000);
+        });
+</script>
+{% endif %}
 {% endblock %}

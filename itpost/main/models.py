@@ -21,7 +21,7 @@ class User(models.Model):
     role = models.ForeignKey(Role, on_delete=models.PROTECT, default=3)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-    image = models.FileField(upload_to="profile/", blank=True, null=True)
+    image = models.FileField(upload_to="profile/", blank=True, null=True, default="profile/profile.png")
 
     def __str__(self):
         return f"({self.username}) - {self.first_name} {self.last_name}"
@@ -77,6 +77,11 @@ class PostType(models.Model):
 
 
 class Post(models.Model):
+    class PostStatus(models.TextChoices):
+        PENDING = 'pending', 'รออนุมัติ'
+        APPROVED = 'approved', 'อนุมัติแล้ว'
+        REJECTED = 'rejected', 'ปฏิเสธ'
+
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
     post_type = models.ForeignKey(PostType, on_delete=models.SET_NULL, null=True)
@@ -91,7 +96,7 @@ class Post(models.Model):
 
     annonymous = models.BooleanField(default=False)
 
-    pending = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=PostStatus.choices, default=PostStatus.PENDING)
 
     def __str__(self):
         return self.title
