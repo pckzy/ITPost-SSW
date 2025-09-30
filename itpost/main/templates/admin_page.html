@@ -11,8 +11,13 @@
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
     <div class="bg-gradient-to-b from-[#011A4F] to-[#023BB5] px-8 py-6">
         <div class="text-white">
-            <h3 class="text-2xl font-bold">จัดการผู้ใช้ทั้งหมด</h3>
-            <p class="opacity-90">จำนวนผู้ใช้ทั้งหมด {{ user_lists.count }} บัญชี</p>
+            <div class="flex justify-between items-center">
+                <div class="">
+                    <h3 class="text-2xl font-bold">จัดการผู้ใช้ทั้งหมด</h3>
+                    <p class="opacity-90">จำนวนผู้ใช้ทั้งหมด {{ user_lists.count }} บัญชี</p>
+                </div>
+                <i class="fa fa-bars text-3xl cursor-pointer" onclick="toggleTable()"></i>
+            </div>
         </div>
     </div>
 
@@ -66,7 +71,8 @@
         </div>
     </div> -->
 
-    <div class="hidden lg:block bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-500 max-h-0" id="table-div">
+    <!-- <div class="hidden lg:block bg-white rounded-lg shadow-md overflow-hidden" id="table-div"> -->
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-100 border-b">
@@ -109,210 +115,220 @@
 
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
     <div class="bg-gradient-to-b from-[#011A4F] to-[#023BB5] px-8 py-6 text-white">
-        <div>
-            <h3 class="text-2xl font-bold">อนุมัติโพสต์</h3>
-            <p class="opacity-90">โพสต์ที่รออนุมัติจำนวน {{ posts.paginator.count }} โพสต์</p>
-        </div>
-    </div>
-
-    {% for post in posts %}
-<div id="post-{{ post.id }}" class="rounded-xl p-4 my-3 mx-6 bg-white shadow-lg">
-    <div class="flex items-center rounded-lg">
-        <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{% if post.annonymous %} {{ MEDIA_URL }}profile.png {% else %} /media/{{ post.created_by.image }} {% endif %}" alt="Profile">
-        <div class="ml-3 flex-1">
+        <div class="flex justify-between items-center">
             <div class="">
-                {% if post.annonymous %}
-                    <div class="text-xl font-medium text-gray-800 select-none">ไม่ระบุตัวตน</div>
-                {% else %}
-                    <div class="text-xl font-medium text-gray-800"><a href="{% url 'profile_view' post.created_by.username %}">{{ post.created_by.get_post_name }}</a></div>
-                {% endif %}
+                <h3 class="text-2xl font-bold">อนุมัติโพสต์</h3>
+                <p class="opacity-90">โพสต์ที่รออนุมัติจำนวน {{ posts.paginator.count }} โพสต์</p>
             </div>
-            <div class="text-sm text-gray-500 my-1 flex flex-wrap items-center gap-1">
-                {% if post.post_type.id == 1 %}
-                    <span class="text-white bg-red-500 rounded px-2 py-0.5 text-xs font-medium">{{ post.post_type.name }}</span>
-                {% elif post.post_type.id == 2 %}
-                    <span class="text-white bg-yellow-500 rounded px-2 py-0.5 text-xs font-medium">{{ post.post_type.name }}</span>
-                {% else %}
-                    <span class="text-white bg-gray-600 rounded px-2 py-0.5 text-xs font-medium">{{ post.post_type.name }}</span>
-                {% endif %}
-                    <span class="px-1 text-gray-400">|</span>
-                    {% for majors in post.majors.all %}
-                    {% if majors.id == 1 %}
-                    <span class="text-white bg-blue-600 rounded px-2 py-0.5 text-xs font-medium">IT</span>
-                    {% elif majors.id == 2 %}
-                    <span class="text-white bg-purple-500 rounded px-2 py-0.5 text-xs font-medium">DSBA</span>
-                    {% elif majors.id == 3 %}
-                    <span class="text-white bg-orange-500 rounded px-2 py-0.5 text-xs font-medium">AIT</span>
-                    {% else %}
-                    <span class="text-white bg-green-600 rounded px-2 py-0.5 text-xs font-medium">BIT</span>
-                    {% endif %}
-                    {% endfor %}
-                    <span class="px-1 text-gray-400">|</span>
-                    {% for spec in post.specializations.all %}
-                    {% if spec.id == 1 %}
-                    <span class="text-white bg-blue-600 rounded px-2 py-0.5 text-xs font-medium">Software Engineer</span>
-                    {% elif spec.id == 2 %}
-                    <span class="text-white bg-purple-500 rounded px-2 py-0.5 text-xs font-medium">Network</span>
-                    {% elif spec.id == 3 %}
-                    <span class="text-white bg-orange-500 rounded px-2 py-0.5 text-xs font-medium">Multimedia</span>
-                    {% elif spec.id == 4 %}
-                    <span class="text-white bg-green-600 rounded px-2 py-0.5 text-xs font-medium">Data Analyst</span>
-                    {% else %}
-                    <span class="text-white bg-amber-900 rounded px-2 py-0.5 text-xs font-medium">Data Engineer</span>
-                    {% endif %}
-                    {% endfor %}
-                <span class="px-1 text-gray-400">|</span>
-                <span class="text-gray-500 text-xs">{{ post.last_updated|date:"d M Y H:i" }}</span>
-            </div>
+            <i class="fa fa-bars text-3xl cursor-pointer" onclick="togglePostApprove()"></i>
         </div>
     </div>
-    <hr class="mt-3 border-gray-200">
-    <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 py-3 leading-tight">{{ post.title }}</h2>
-    <div class="prose max-w-none">
-        <p class="text-base text-gray-700 leading-relaxed">{{ post.content|linebreaks }}</p>
-    </div>
-    <div class="flex flex-wrap gap-3 mt-4">
-        {% if post.files.all %}
-            {% for file in post.files.all %}
-                {% if file.file.name|lower|ends_with:".jpg" or file.file.name|lower|ends_with:".jpeg" or file.file.name|lower|ends_with:".png" or file.file.name|lower|ends_with:".gif" %}
-                    <a href="{{ file.file.url }}" target="_blank" class="block">
-                        <img src="{{ file.file.url }}" alt="Preview of {{ file.file.name }}" class="max-w-xs h-auto object-cover rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                    </a>
-                {% elif file.file.name|lower|ends_with:".pdf" %}
-                    <a href="{{ file.file.url }}" target="_blank" class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors duration-200">
-                        <i class="far fa-file-pdf text-2xl text-red-600"></i>
-                        <span class="ml-2 text-sm font-medium text-gray-700">{{ file.file.name|remove_prefix:"uploads/" }}</span>
-                    </a>
-                {% elif file.file.name|lower|ends_with:".docx" %}
-                    <a href="{{ file.file.url }}" target="_blank" class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors duration-200">
-                        <i class="far fa-file-word text-2xl text-blue-600"></i>
-                        <span class="ml-2 text-sm font-medium text-gray-700">{{ file.file.name|remove_prefix:"uploads/" }}</span>
-                    </a>
-                {% else %}
-                    <a href="{{ file.file.url }}" target="_blank" class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors duration-200">
-                        <i class="far fa-file text-2xl text-gray-600"></i>
-                        <span class="ml-2 text-sm font-medium text-gray-700">{{ file.file.name|remove_prefix:"uploads/" }}</span>
-                    </a>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-        <!-- <p class="text-gray-500">ไม่มีไฟล์แนบ</p> -->
-        {% endif %}
-    </div>
-    <hr class="mt-4 border-gray-200">
-    <div class="flex flex-col sm:flex-row gap-3 pt-4">
-        <button onclick="approvePost(this)" data-post-id="{{ post.id }}" class="w-full sm:flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium text-sm sm:text-base cursor-pointer">
-            <i class="fa fa-check"></i> อนุมัติ
-        </button>
-        <button onclick="rejectPost(this)" data-post-id="{{ post.id }}" class="w-full sm:flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium text-sm sm:text-base cursor-pointer">
-            <i class="fa fa-xmark"></i> ปฏิเสธ
-        </button>
-    </div>
-</div>
-{% empty %}
-<div class="text-center py-8">
-    <p class="text-gray-500 text-lg">ยังไม่มีโพสต์</p>
-</div>
-{% endfor %}
 
-{% if posts.has_other_pages %}
-    <div class="flex justify-center my-3">
-        <div class="flex items-center space-x-2">
-            {% if posts.has_previous %}
-                <a href="?{% update_query request page=posts.previous_page_number %}" 
-                   class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
-                    < ก่อนหน้า
-                </a>
-               {% endif %}
-            
-            <span class="px-4 py-2 bg-blue-500 text-white rounded-lg">
-                หน้า {{ posts.number }} จาก {{ posts.paginator.num_pages }}
-            </span>
-            
-            {% if posts.has_next %}
-                <a href="?{% update_query request page=posts.next_page_number %}" 
-                   class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
-                    ถัดไป >
-                </a>
+<div class="overflow-hidden transition-all duration-500 max-h-[1000px]" id="post-approve-div">
+    {% for post in posts %}
+    <div id="post-{{ post.id }}" class="rounded-xl p-4 my-3 mx-6 bg-white shadow-lg">
+        <div class="flex items-center rounded-lg">
+            <img class="w-16 h-16 rounded-full border-4 border-gray-200 object-cover" src="{% if post.annonymous %} {{ MEDIA_URL }}profile.png {% else %} /media/{{ post.created_by.image }} {% endif %}" alt="Profile">
+            <div class="ml-3 flex-1">
+                <div class="">
+                    {% if post.annonymous %}
+                        <div class="text-xl font-medium text-gray-800 select-none">ไม่ระบุตัวตน</div>
+                    {% else %}
+                        <div class="text-xl font-medium text-gray-800"><a href="{% url 'profile_view' post.created_by.username %}">{{ post.created_by.get_post_name }}</a></div>
+                    {% endif %}
+                </div>
+                <div class="text-sm text-gray-500 my-1 flex flex-wrap items-center gap-1">
+                    {% if post.post_type.id == 1 %}
+                        <span class="text-white bg-red-500 rounded px-2 py-0.5 text-xs font-medium">{{ post.post_type.name }}</span>
+                    {% elif post.post_type.id == 2 %}
+                        <span class="text-white bg-yellow-500 rounded px-2 py-0.5 text-xs font-medium">{{ post.post_type.name }}</span>
+                    {% else %}
+                        <span class="text-white bg-gray-600 rounded px-2 py-0.5 text-xs font-medium">{{ post.post_type.name }}</span>
+                    {% endif %}
+                        <span class="px-1 text-gray-400">|</span>
+                        {% for majors in post.majors.all %}
+                        {% if majors.id == 1 %}
+                        <span class="text-white bg-blue-600 rounded px-2 py-0.5 text-xs font-medium">IT</span>
+                        {% elif majors.id == 2 %}
+                        <span class="text-white bg-purple-500 rounded px-2 py-0.5 text-xs font-medium">DSBA</span>
+                        {% elif majors.id == 3 %}
+                        <span class="text-white bg-orange-500 rounded px-2 py-0.5 text-xs font-medium">AIT</span>
+                        {% else %}
+                        <span class="text-white bg-green-600 rounded px-2 py-0.5 text-xs font-medium">BIT</span>
+                        {% endif %}
+                        {% endfor %}
+                        <span class="px-1 text-gray-400">|</span>
+                        {% for spec in post.specializations.all %}
+                        {% if spec.id == 1 %}
+                        <span class="text-white bg-blue-600 rounded px-2 py-0.5 text-xs font-medium">Software Engineer</span>
+                        {% elif spec.id == 2 %}
+                        <span class="text-white bg-purple-500 rounded px-2 py-0.5 text-xs font-medium">Network</span>
+                        {% elif spec.id == 3 %}
+                        <span class="text-white bg-orange-500 rounded px-2 py-0.5 text-xs font-medium">Multimedia</span>
+                        {% elif spec.id == 4 %}
+                        <span class="text-white bg-green-600 rounded px-2 py-0.5 text-xs font-medium">Data Analyst</span>
+                        {% else %}
+                        <span class="text-white bg-amber-900 rounded px-2 py-0.5 text-xs font-medium">Data Engineer</span>
+                        {% endif %}
+                        {% endfor %}
+                    <span class="px-1 text-gray-400">|</span>
+                    <span class="text-gray-500 text-xs">{{ post.last_updated|date:"d M Y H:i" }}</span>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-3 border-gray-200">
+        <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 py-3 leading-tight">{{ post.title }}</h2>
+        <div class="prose max-w-none">
+            <p class="text-base text-gray-700 leading-relaxed">{{ post.content|linebreaks }}</p>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-4">
+            {% if post.files.all %}
+                {% for file in post.files.all %}
+                    {% if file.file.name|lower|ends_with:".jpg" or file.file.name|lower|ends_with:".jpeg" or file.file.name|lower|ends_with:".png" or file.file.name|lower|ends_with:".gif" %}
+                        <a href="{{ file.file.url }}" target="_blank" class="block">
+                            <img src="{{ file.file.url }}" alt="Preview of {{ file.file.name }}" class="max-w-xs h-auto object-cover rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                        </a>
+                    {% elif file.file.name|lower|ends_with:".pdf" %}
+                        <a href="{{ file.file.url }}" target="_blank" class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors duration-200">
+                            <i class="far fa-file-pdf text-2xl text-red-600"></i>
+                            <span class="ml-2 text-sm font-medium text-gray-700">{{ file.file.name|remove_prefix:"uploads/" }}</span>
+                        </a>
+                    {% elif file.file.name|lower|ends_with:".docx" %}
+                        <a href="{{ file.file.url }}" target="_blank" class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors duration-200">
+                            <i class="far fa-file-word text-2xl text-blue-600"></i>
+                            <span class="ml-2 text-sm font-medium text-gray-700">{{ file.file.name|remove_prefix:"uploads/" }}</span>
+                        </a>
+                    {% else %}
+                        <a href="{{ file.file.url }}" target="_blank" class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors duration-200">
+                            <i class="far fa-file text-2xl text-gray-600"></i>
+                            <span class="ml-2 text-sm font-medium text-gray-700">{{ file.file.name|remove_prefix:"uploads/" }}</span>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+            <!-- <p class="text-gray-500">ไม่มีไฟล์แนบ</p> -->
             {% endif %}
         </div>
+        <hr class="mt-4 border-gray-200">
+        <div class="flex flex-col sm:flex-row gap-3 pt-4">
+            <button onclick="approvePost(this)" data-post-id="{{ post.id }}" class="w-full sm:flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium text-sm sm:text-base cursor-pointer">
+                <i class="fa fa-check"></i> อนุมัติ
+            </button>
+            <button onclick="rejectPost(this)" data-post-id="{{ post.id }}" class="w-full sm:flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium text-sm sm:text-base cursor-pointer">
+                <i class="fa fa-xmark"></i> ปฏิเสธ
+            </button>
+        </div>
     </div>
-{% endif %}
+    {% empty %}
+    <div class="text-center py-8">
+        <p class="text-gray-500 text-lg">ยังไม่มีโพสต์</p>
+    </div>
+    {% endfor %}
+    
+    {% if posts.has_other_pages %}
+        <div class="flex justify-center my-3">
+            <div class="flex items-center space-x-2">
+                {% if posts.has_previous %}
+                    <a href="?{% update_query request page=posts.previous_page_number %}" 
+                       class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
+                        < ก่อนหน้า
+                    </a>
+                   {% endif %}
+                
+                <span class="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                    หน้า {{ posts.number }} จาก {{ posts.paginator.num_pages }}
+                </span>
+                
+                {% if posts.has_next %}
+                    <a href="?{% update_query request page=posts.next_page_number %}" 
+                       class="px-3 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg transition">
+                        ถัดไป >
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
 
 </div>
 
 
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
     <div class="bg-gradient-to-b from-[#011A4F] to-[#023BB5] px-8 py-6 text-white">
-        <div>
-            <h3 class="text-2xl font-bold">สร้างบัญชีพิเศษ</h3>
-            <p class="opacity-90">กรุณาเลือกบทบาทของบัญชี</p>
+        <div class="flex justify-between items-center">
+            <div class="">
+                <h3 class="text-2xl font-bold">สร้างบัญชีพิเศษ</h3>
+                <p class="opacity-90">กรุณาเลือกบทบาทของบัญชี</p>
+            </div>
+            <i class="fa fa-bars text-3xl cursor-pointer" onclick="toggleForm()"></i>
         </div>
     </div>
     
-    <form action="" method="post" class="p-4 mb-3 mx-6" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
-            <div class="">
-                <label for="{{ forms.first_name.id_for_label }}"
-                class="block mb-2 text-lg font-medium text-gray-900">ชื่อจริง 
-                <span class="text-red-600">*</span></label>
-                {{ forms.first_name }}
-            </div>
-            <div class="">
-                <label for="{{ forms.last_name.id_for_label }}"
-                class="block mb-2 text-lg font-medium text-gray-900">นามสกุล 
-                <span class="text-red-600">*</span></label>
-                {{ forms.last_name }}
-            </div>
-            <div class="">
-                <label for="{{ forms.username.id_for_label }}"
-                class="block mb-2 text-lg font-medium text-gray-900">ชื่อผู้ใช้ 
-                <span class="text-red-600">*</span></label>
-                {{ forms.username }}
-            </div>
-            <div class="">
-                <label for="{{ forms.password.id_for_label }}"
-                class="block mb-2 text-lg font-medium text-gray-900">รหัสผ่าน 
-                <span class="text-red-600">*</span></label>
-                {{ forms.password }}
-            </div>
-            <div class="">
-                <label for="{{ forms.email.id_for_label }}"
-                class="block mb-2 text-lg font-medium text-gray-900">อีเมล 
-                <span class="text-red-600">*</span></label>
-                {{ forms.email }}
-            </div>
-            <div class="">
-                <label for="{{ forms.role.id_for_label }}"
-                class="block mb-2 text-lg font-medium text-gray-900">บทบาท 
-                <span class="text-red-600">*</span></label>
-                {{ forms.role }}
-            </div>
-        </div>
-        
-        <div class="mt-3">
-            <div class="flex gap-4">
-                <div class="flex flex-col flex-1 gap-4 justify-end">
+    <div class="overflow-hidden transition-all duration-500 max-h-[1000px]" id="form-div">
+        <form action="" method="post" class="p-4 mb-3 mx-6" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+                <div class="">
+                    <label for="{{ forms.first_name.id_for_label }}"
+                    class="block mb-2 text-lg font-medium text-gray-900">ชื่อจริง 
+                    <span class="text-red-600">*</span></label>
+                    {{ forms.first_name }}
+                </div>
+                <div class="">
+                    <label for="{{ forms.last_name.id_for_label }}"
+                    class="block mb-2 text-lg font-medium text-gray-900">นามสกุล 
+                    <span class="text-red-600">*</span></label>
+                    {{ forms.last_name }}
+                </div>
+                <div class="">
+                    <label for="{{ forms.username.id_for_label }}"
+                    class="block mb-2 text-lg font-medium text-gray-900">ชื่อผู้ใช้ 
+                    <span class="text-red-600">*</span></label>
+                    {{ forms.username }}
+                </div>
+                <div class="">
+                    <label for="{{ forms.password.id_for_label }}"
+                    class="block mb-2 text-lg font-medium text-gray-900">รหัสผ่าน 
+                    <span class="text-red-600">*</span></label>
+                    {{ forms.password }}
+                </div>
+                <div class="">
+                    <label for="{{ forms.email.id_for_label }}"
+                    class="block mb-2 text-lg font-medium text-gray-900">อีเมล 
+                    <span class="text-red-600">*</span></label>
+                    {{ forms.email }}
+                </div>
+                <div class="">
                     <label for="{{ forms.role.id_for_label }}"
-                    class="block mb-2 text-lg font-medium text-gray-900">รูปโปรไฟล์
-                    {{ forms.image }}
-                </div>
-                <div class="w-24 h-24 rounded-lg overflow-hidden border border-gray-300">
-                    <img id="preview" src="/media/profile/profile.png" alt="Profile preview" class="w-full h-full object-cover">
+                    class="block mb-2 text-lg font-medium text-gray-900">บทบาท 
+                    <span class="text-red-600">*</span></label>
+                    {{ forms.role }}
                 </div>
             </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-4 mt-8">
-            <button type="submit" class="w-full sm:flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
-                สร้างบัญชี
-            </button>
-            <button type="reset" class="w-full sm:w-auto px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">
-                ล้างข้อมูล
-            </button>
-        </div>
-    </form>
+            
+            <div class="mt-3">
+                <div class="flex gap-4">
+                    <div class="flex flex-col flex-1 gap-4 justify-end">
+                        <label for="{{ forms.role.id_for_label }}"
+                        class="block mb-2 text-lg font-medium text-gray-900">รูปโปรไฟล์
+                        {{ forms.image }}
+                    </div>
+                    <div class="w-24 h-24 rounded-lg overflow-hidden border border-gray-300">
+                        <img id="preview" src="/media/profile/profile.png" alt="Profile preview" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                <button type="submit" class="w-full sm:flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+                    สร้างบัญชี
+                </button>
+                <button type="reset" class="w-full sm:w-auto px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">
+                    ล้างข้อมูล
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
 
@@ -322,4 +338,38 @@
 </script>
 
 <script src="{% static 'js/admin.js' %}"></script>
+<script>
+    function toggleTable() {
+        const tableDiv = document.getElementById('table-div')
+        if (tableDiv.classList.contains('max-h-0')) {
+            tableDiv.classList.remove('max-h-0')
+            tableDiv.classList.add('max-h-[1000px]')
+        } else {
+            tableDiv.classList.add('max-h-0')
+            tableDiv.classList.remove('max-h-[1000px]')
+        }
+    }
+
+    function togglePostApprove() {
+        const postApproveDiv = document.getElementById('post-approve-div')
+        if (postApproveDiv.classList.contains('max-h-0')) {
+            postApproveDiv.classList.remove('max-h-0')
+            postApproveDiv.classList.add('max-h-[1000px]')
+        } else {
+            postApproveDiv.classList.add('max-h-0')
+            postApproveDiv.classList.remove('max-h-[1000px]')
+        }
+    }
+
+    function toggleForm() {
+        const formDiv = document.getElementById('form-div')
+        if (formDiv.classList.contains('max-h-0')) {
+            formDiv.classList.remove('max-h-0')
+            formDiv.classList.add('max-h-[1000px]')
+        } else {
+            formDiv.classList.add('max-h-0')
+            formDiv.classList.remove('max-h-[1000px]')
+        }
+    }
+</script>
 {% endblock %}

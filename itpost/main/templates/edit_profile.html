@@ -17,7 +17,7 @@
         <div class="p-8">
             <div class="bg-gray-50 rounded-xl p-6 mb-8">
                 <div class="flex items-center space-x-4">
-                    <img src="/media/{{ user.image }}" class="w-16 h-16 rounded-full" id="preview" alt="">
+                    <img src="/media/{{ user.image }}" class="w-16 h-16 rounded-full object-cover" id="preview" alt="">
                     <div>
                         <h3 class="text-xl font-semibold">{{ user.get_full_name }}</h3>
                         <p class="text-gray-600">@{{ user.username }}</p>

@@ -150,7 +150,7 @@
                 </button>
             <button class="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors cursor-pointer duration-200 transform hover:scale-110">
                 <i data-post-id="{{ post.id }}" class="comment-btn far fa-comment text-xl"></i>
-                <span class="comment-count">{{ post.comments.count }}</span>
+                <span id="comment-{{ post.id }}-count">{{ post.comments.count }}</span>
             </button>
         </div>
         <div class="flex gap-6">
@@ -228,7 +228,7 @@
                     <form id="commentForm">
                         <input type="hidden" name="csrfmiddlewaretoken" id="csrfToken" value="{{ csrf_token }}">
                         <div class="flex space-x-3">
-                            <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
+                            <img class="w-10 h-10 rounded-full border-2 border-blue-100 object-cover" 
                                  src="/media/{{ user_logged.image }}" alt="Your Avatar">
                             <div class="flex-1 flex">
                                 <input 

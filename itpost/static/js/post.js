@@ -26,7 +26,7 @@ function openCommentModal(postId) {
 
             if (data.comments.length === 0) {
                 const commentHtml = `
-                    <div class="text-center py-2">
+                    <div id="none-comment" class="text-center py-2">
                         <p class="text-sm text-gray-500 font-medium">
                             ยังไม่มีความคิดเห็น
                         </p>
@@ -38,7 +38,7 @@ function openCommentModal(postId) {
                 const commentHtml = `
                     <div class="mb-3">
                         <div class="flex items-center space-x-3">
-                            <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
+                            <img class="w-10 h-10 rounded-full border-2 border-blue-100 object-cover" 
                                 src="/media/${comment.image}" alt="User">
                             <div class="flex-1">
                                 <div class="flex items-baseline gap-2 mb-1">
@@ -81,10 +81,18 @@ function openCommentModal(postId) {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
+                        const none_comment = document.getElementById('none-comment')
+                        const comment_count = document.getElementById(`comment-${postId}-count`)
+                        if (none_comment) {
+                            none_comment.classList.add('hidden')
+                        }
+                        if (comment_count) {
+                            comment_count.innerText = Number(comment_count.innerText) + 1
+                        }
                         const newComment = `
                         <div class="mb-3">
                             <div class="flex items-center space-x-3">
-                                <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
+                                <img class="w-10 h-10 rounded-full border-2 border-blue-100 object-cover" 
                                     src="/media/${data.comment.image}" alt="User">
                                 <div class="flex-1">
                                     <div class="flex items-baseline gap-2 mb-1">

@@ -10,7 +10,7 @@
 {% block content %}
 <div class="rounded-xl p-4 mb-6 bg-white shadow-lg">
     <div class="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-4">
-        <img class="w-24 h-24 rounded-full border mb-3 sm:mb-0" src="/media/{{ user.image }}" alt="Profile">
+        <img class="w-24 h-24 rounded-full border mb-3 sm:mb-0 object-cover" src="/media/{{ user.image }}" alt="Profile">
 
         <div class="flex-1 w-full">
             <div>
@@ -171,7 +171,7 @@
                 </button>
             <button class="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors cursor-pointer duration-200 transform hover:scale-110">
                 <i data-post-id="{{ post.id }}" class="comment-btn far fa-comment text-xl"></i>
-                <span>{{ post.comments.count }}</span>
+                <span id="comment-{{ post.id }}-count">{{ post.comments.count }}</span>
             </button>
         </div>
         <div class="flex gap-6">
@@ -226,8 +226,8 @@
                     <form id="commentForm">
                         <input type="hidden" name="csrfmiddlewaretoken" id="csrfToken" value="{{ csrf_token }}">
                         <div class="flex space-x-3">
-                            <img class="w-10 h-10 rounded-full border-2 border-blue-100" 
-                                 src="{{ MEDIA_URL }}profile.png" alt="Your Avatar">
+                            <img class="w-10 h-10 rounded-full border-2 border-blue-100 object-cover" 
+                                 src="/media/{{ user_logged.image }}" alt="Your Avatar">
                             <div class="flex-1 flex">
                                 <input 
                                     type="text" 
