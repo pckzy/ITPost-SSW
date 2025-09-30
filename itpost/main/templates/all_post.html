@@ -15,31 +15,36 @@
         
 
         <div class="max-w-5xl mx-auto bg-white rounded-2xl p-6 shadow-xl">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                    <select name="year" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="year" multiple>
-                        {% for i in years %}
-                            <option value="{{ i }}" {% if i|stringformat:"s" in year_query %}selected{% endif %}>ปี {{ i }}</option>
-                        {% endfor %}
-                    </select>
+            <form method="GET" >
+                <div class="mb-4">
+                    <input name="search" class="block w-full text-black rounded-md border-gray-300 field-sizing-content border-[1px] px-4 py-2" id="search" type="text" placeholder="ค้นหาโพสต์..." value="{{ request.GET.search }}" />
                 </div>
-                <div>
-                    <select name="major" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="major" multiple>
-                        {% for major in majors %}
-                            <option value="{{ major.id }}" {% if major.id|stringformat:"s" in major_query %}selected{% endif %}>{{ major.code }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div>
+                        <select name="year" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="year" multiple>
+                            {% for i in years %}
+                                <option value="{{ i }}" {% if i|stringformat:"s" in year_query %}selected{% endif %}>ปี {{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <select name="major" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="major" multiple>
+                            {% for major in majors %}
+                                <option value="{{ major.id }}" {% if major.id|stringformat:"s" in major_query %}selected{% endif %}>{{ major.code }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <select name="specialization" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="specialization" multiple>
+                            {% for specialization in specializations %}
+                                <option value="{{ specialization.id }}" {% if specialization.id|stringformat:"s" in specialization_query %}selected{% endif %}>{{ specialization.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
+                        <i class="fa fa-magnifying-glass"></i> ค้นหา
+                    </button>
                 </div>
-                <div>
-                    <select name="specialization" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="specialization" multiple>
-                        {% for specialization in specializations %}
-                            <option value="{{ specialization.id }}" {% if specialization.id|stringformat:"s" in specialization_query %}selected{% endif %}>{{ specialization.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
-                    <i class="fa fa-magnifying-glass"></i> ค้นหา
-                </button>
             </form>
         </div>
     </div>

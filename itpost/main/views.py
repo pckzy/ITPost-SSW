@@ -69,9 +69,18 @@ class MainView(View):
         user = User.objects.get(pk=user_id)
         posts_list = Post.objects.prefetch_related('files').all().order_by('-created_at')
 
+        search = request.GET.get('search', '')
         year_query = request.GET.getlist('year')
         major_query = request.GET.getlist('major')
         specialization_query = request.GET.getlist('specialization')
+
+        if search:
+            posts_list = posts_list.annotate(full_name=Concat('created_by__first_name', Value(' '), 'created_by__last_name')).filter(
+                Q(title__icontains=search) |
+                Q(content__icontains=search) |
+                Q(created_by__username__icontains=search, annonymous=False) |
+                Q(full_name__icontains=search, annonymous=False)
+            ).distinct()
 
         if year_query or major_query or specialization_query:
             if year_query:
