@@ -67,7 +67,7 @@ class MainView(View):
         user_id = request.session.get('user_id')
         user_logged = User.objects.get(pk=user_id)
         user = User.objects.get(pk=user_id)
-        posts_list = Post.objects.prefetch_related('files').all().order_by('-created_at')
+        posts_list = Post.objects.prefetch_related('files').filter(pending=False).order_by('-created_at')
 
         search = request.GET.get('search', '')
         year_query = request.GET.getlist('year')
@@ -141,6 +141,10 @@ class CreateView(View):
         if create_form.is_valid():
             post = create_form.save(commit=False)
             post.created_by = user
+
+            if user.role.id == 3:  # Student
+                post.pending = True
+
             post.save()
             create_form.save_m2m()
 

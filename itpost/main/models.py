@@ -91,6 +91,8 @@ class Post(models.Model):
 
     annonymous = models.BooleanField(default=False)
 
+    pending = models.BooleanField(default=False)
+
     def __str__(self):
         return self.title
     
